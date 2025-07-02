@@ -13,10 +13,13 @@ const routes = [
     props: true,
   },
   {
-    path: "/recipe-list/:id", // Route dinamis untuk Recipe List
+    path: "/recipe-list/:id",
     name: "RecipeList",
     component: RecipeList,
-    props: true,
+    props: (route) => ({
+      id: route.params.id,
+      page: parseInt(route.query.page) || 1,
+    }),
   },
 ];
 
