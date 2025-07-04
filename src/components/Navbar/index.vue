@@ -4,13 +4,39 @@
       <div class="d-flex align-center">
         <v-icon class="ml-4 mr-4" v-if="$vuetify.display.mobile" @click.stop="drawer = !drawer">{{ drawer ? 'mdi-close' : 'mdi-menu' }}</v-icon>
         <v-img src="/assets/logo.png" max-height="35" min-width="35"></v-img>
-      </div>
-      <div v-if="!$vuetify.display.mobile" class="d-flex align-center" :style="$vuetify.display.mobile ? 'gap: 10px' : 'gap: 20px'" :class="$vuetify.display.mobile ? 'mr-4' : ''" >
-        <div v-for="(item, i) in items" :key="i" style="font-size: 15px">
-          {{ item }}
+        <div v-if="!$vuetify.display.mobile" class="d-flex align-center ml-4" :style="$vuetify.display.mobile ? 'gap: 10px' : 'gap: 20px'" :class="$vuetify.display.mobile ? 'mr-4' : ''" >
+          <div v-for="(item, i) in items" :key="i" style="font-size: 15px">
+            {{ item }}
+          </div>
         </div>
       </div>
-      <v-icon :class="$vuetify.display.mobile ? 'mr-4 mb-1' : ''" @click="toggleTheme">{{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}</v-icon>
+      <div class="d-flex align-center">
+        <v-autocomplete 
+          v-model="selectedRecipe"
+          :items="results"
+          :loading="loading"
+          item-title="title"
+          item-value="id"
+          return-object
+          no-filter
+          class="mx-auto mr-4"
+          style="min-width: 350px; margin-bottom: -22px"
+          v-if="!$vuetify.display.mobile" 
+          hide-no-data
+          :hide-details="false"
+          density="compact"
+          append-inner-icon="mdi-magnify"
+          variant="outlined"
+          rounded
+          menu-icon=""
+          placeholder="Search recipe or ingredient"
+          @update:search="onSearch"
+          @update:model-value="onSelect"
+        />
+        <div class="d-flex align-center">
+          <v-icon :class="$vuetify.display.mobile ? 'mr-4 mb-1' : ''" @click="toggleTheme">{{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}</v-icon>
+        </div>
+      </div>
     </div>
   </v-app-bar>
   <v-divider v-if="!$vuetify.display.mobile"></v-divider>
@@ -26,7 +52,23 @@
       </div>
     </div>
     <div v-else style="width: 100%; margin-bottom: -10px" class="pl-4 pr-4">
-      <v-text-field :hide-details="false" @keyup.enter="searchRecipes" v-model="query" density="compact" variant="outlined" placeholder="Search recipe or ingredient"></v-text-field>
+      <v-autocomplete 
+        v-model="selectedRecipe"
+        :items="results"
+        :loading="loading"
+        item-title="title"
+        item-value="id"
+        return-object
+        no-filter
+        hide-no-data
+        :hide-details="false"
+        density="compact"
+        variant="outlined"
+        menu-icon=""
+        placeholder="Search recipe or ingredient"
+        @update:search="onSearch"
+        @update:model-value="onSelect"
+      />
     </div>
   </v-app-bar>
 
@@ -35,6 +77,7 @@
     v-model="drawer"
     temporary
   >
+
     <v-list>
       <v-list-item v-for="item in items" :key="item" link :title="item"></v-list-item>
       <v-list-group value="Recipes">
@@ -59,12 +102,18 @@
 
 <script>
 import { useRecipeStore } from "@/stores/recipeSearch";
+import axios from "axios"
 export default {
   name: "NavbarComponent",
   data() {
     return {
-      query: '',
+      selectedRecipe: null,
+      query: "",
+      results: [],
+      loading: false,
+      cancelToken: null,
       drawer: false,
+      search: "",
       headerAdditional: [
         {
           name: 'Dinner'
@@ -99,6 +148,50 @@ export default {
   },
 
   methods: {
+    async onSearch(query) {
+      this.query = query;
+
+      if (query.length < 4) {
+        this.results = [];
+        return;
+      }
+
+      if (this.cancelToken) {
+        this.cancelToken.cancel("Cancel previous request");
+      }
+
+      this.cancelToken = axios.CancelToken.source();
+      this.loading = true;
+
+      try {
+        const res = await axios.get(
+          `https://api.spoonacular.com/recipes/autocomplete`,
+          {
+            params: {
+              number: 5,
+              query,
+              apiKey: process.env.VUE_APP_SPOONACULAR_API_KEY,
+            },
+            cancelToken: this.cancelToken.token,
+          }
+        );
+        this.results = res.data;
+      } catch (err) {
+        if (!axios.isCancel(err)) {
+          console.error("Autocomplete error:", err);
+        }
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    onSelect(item) {
+      if (item?.id) {
+        this.selectedRecipe = null;
+        this.$router.push(`/recipe/${item.id}`);
+      }
+    },
+
     toggleTheme() {
       const next = this.isDark ? "light" : "dark";
       this.$vuetify.theme.global.name = next;
@@ -106,10 +199,19 @@ export default {
     },
 
     async searchRecipes() {
-      const store = useRecipeStore(); // Gunakan store
-      await store.fetchRecipes(this.query); // Panggil metode di store
+      const store = useRecipeStore();
+      await store.fetchRecipes(this.query);
       this.$router.push(`/recipe-list/${this.query}`);
     },
   },
 };
 </script>
+
+<style scope>
+.text-decoration-none {
+  text-decoration: none;
+}
+.text-black {
+  color: black;
+}
+</style>

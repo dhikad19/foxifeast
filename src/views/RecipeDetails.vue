@@ -121,6 +121,25 @@
                 </v-btn-toggle>
               </div>
             </v-col>
+            <v-col cols="12">
+              <p class="mb-2 mt-2" style="font-weight: bold">Occasions</p>
+              <v-row dense>
+                <v-col cols="3" v-for="item in recipe.occasions" :key="item" >
+                  <div 
+                    style="border-radius: 4px" 
+                    class="d-flex align-center justify-center pa-3" 
+                    :style="$vuetify.theme.global.name === 'dark' ? 'background-color: #4f4f4f; ' : 'background-color: #fafafa; '"
+                  >
+                    <v-icon class="mr-2" style="font-size: 20px">
+                      {{ occasionsItems[item] }}
+                    </v-icon>
+                    <p style="text-transform: capitalize; text-align: center; font-size: 14px; font-weight: bold">
+                      {{ item }}
+                    </p>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-col>
           </v-row>
         </v-col>
       </v-row>
@@ -167,44 +186,34 @@
           <v-col :cols="$vuetify.display.mobile ? 3 : 4">
             <div 
               class="d-flex align-center pa-2 justify-center flex-column" 
-              style="border-radius: 4px; background-color: #00800038;"
+              style="border-radius: 4px; background-color: #ffff002c;"
             >
               <v-icon 
                 class="mb-2" 
-                color="green"
-                >mdi-room-service-outline
+                color="yellow"
+                >mdi-clock-outline
               </v-icon>
-              <div class="d-flex align-center">
-                <v-icon style="font-size: 18px" class="mr-3" @click="currentServings = Math.max(1, currentServings - 1)">mdi-minus</v-icon>
-                <p style="font-weight: bold; font-size: 15px">{{ currentServings }}</p>
-                <v-icon style="font-size: 18px" class="ml-3" @click="currentServings++">mdi-plus</v-icon>
-              </div>
+              <p style="font-size: 14px">Time</p>
+                <span 
+                  style="font-size: 15px; font-weight: bold">
+                  {{ recipe.readyInMinutes }} min
+                </span>
             </div>
           </v-col>
           <v-col :cols="$vuetify.display.mobile ? 3 : 4">
             <div 
               class="d-flex align-center pa-2 justify-center flex-column" 
-              style="border-radius: 4px; background-color: #ffff002c"
+              style="border-radius: 4px; background-color: #ff000041"
             >
               <v-icon 
                 class="mb-2" 
-                color="yellow"
+                color="red"
               >
-                mdi-clock-outline
+                mdi-heart-outline
               </v-icon>
+              <p style="font-size: 14px; max-width: 60px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden">Health Score</p>
               <span 
                 style="font-size: 15px; font-weight: bold">
-                {{ recipe.readyInMinutes }} min
-              </span>
-            </div>
-          </v-col>
-          <v-col :cols="$vuetify.display.mobile ? 3 : 4">
-            <div 
-            class="d-flex align-center pa-2 justify-center flex-column" 
-            style="border-radius: 4px; background-color: #ff000041"
-            >
-              <v-icon class="mb-2" color="red">mdi-chart-ppf</v-icon>
-              <span style="font-size: 15px; font-weight: bold">
                 {{ recipe.healthScore }}
               </span>
             </div>
@@ -212,12 +221,39 @@
           <v-col :cols="$vuetify.display.mobile ? 3 : 4">
             <div 
             class="d-flex align-center pa-2 justify-center flex-column" 
-            style="border-radius: 4px; background-color: #ff000041"
+            style="border-radius: 4px; background-color: #80008067"
             >
-              <v-icon class="mb-2" color="red">mdi-currency-usd</v-icon>
+              <v-icon class="mb-2" color="purple">mdi-star-outline</v-icon>
+              <p style="font-size: 14px">Score</p>
+              <span style="font-size: 15px; font-weight: bold">
+                {{ Math.round(recipe.spoonacularScore) }}%
+              </span>
+            </div>
+          </v-col>
+          <v-col :cols="$vuetify.display.mobile ? 3 : 4">
+            <div 
+            class="d-flex align-center pa-2 justify-center flex-column" 
+            style="border-radius: 4px; background-color: #ffa60077"
+            >
+              <v-icon class="mb-2" color="orange">mdi-currency-usd</v-icon>
+              <p style="font-size: 14px">Per Serving</p>
               <span style="font-size: 15px; font-weight: bold">
                 {{ centsToUSD(recipe.pricePerServing) }}
               </span>
+            </div>
+          </v-col>
+          <v-col cols="6">
+            <div 
+              class="d-flex align-center pa-2 justify-center flex-column" 
+              style="border-radius: 4px; background-color: #00800038;"
+            >
+              <v-icon class="mb-2" color="green">mdi-room-service-outline</v-icon>
+              <p style="font-size: 14px; margin-bottom: -1px">Serving</p>
+              <div class="d-flex align-center mt-4 mb-2">
+                <v-icon style="font-size: 18px" class="mr-6" @click="currentServings = Math.max(1, currentServings - 1)">mdi-minus</v-icon>
+                <p style="font-weight: bold; font-size: 16px">{{ currentServings }}</p>
+                <v-icon style="font-size: 18px" class="ml-6" @click="currentServings++">mdi-plus</v-icon>
+              </div>
             </div>
           </v-col>
           <v-col cols="6">
@@ -231,6 +267,7 @@
               >
                 mdi-scale
               </v-icon>
+              <p class="mb-1" style="font-size: 14px">Scale</p>
               <v-btn-toggle
                 v-model="scale"
                 rounded="2"
@@ -246,6 +283,25 @@
                 </v-btn>
               </v-btn-toggle>
             </div>
+          </v-col>
+          <v-col cols="12">
+            <p class="mb-2 mt-2" style="font-weight: bold">Occasions</p>
+              <v-row dense>
+                <v-col cols="3" v-for="item in recipe.occasions" :key="item" >
+                  <div 
+                    style="border-radius: 4px" 
+                    class="d-flex align-center justify-center pa-3" 
+                    :style="$vuetify.theme.global.name === 'dark' ? 'background-color: #4f4f4f; ' : 'background-color: #fafafa; '"
+                  >
+                    <v-icon class="mr-2" style="font-size: 20px">
+                      {{ occasionsItems[item] }}
+                    </v-icon>
+                    <p style="text-transform: capitalize; text-align: center; font-size: 14px; font-weight: bold">
+                      {{ item }}
+                    </p>
+                  </div>
+                </v-col>
+              </v-row>
           </v-col>
         </v-row>
 
@@ -265,13 +321,15 @@
           <v-col :cols="$vuetify.display.mobile ? 12 : 6">
             <div v-if="recipe.analyzedInstructions?.length">
               <p class="mb-2" style="font-weight: bold">Step</p>
-              <div 
-                v-for="step in recipe.analyzedInstructions[0].steps"
-                :key="step.number"
-                class="pb-3"
-              >
-                <div class="d-flex align-start">
-                  <p style="font-size: 14px; margin-top: -3px">{{ step.number }}. {{ step.step }}</p>
+              <div class="pa-3 pt-4" style="border-radius: 4px" :style="$vuetify.theme.global.name === 'dark' ? 'background-color: #4f4f4f; ' : 'background-color: #fafafa; '">
+                <div 
+                  v-for="step in recipe.analyzedInstructions[0].steps"
+                  :key="step.number"
+                  class="pb-3"
+                >
+                  <div class="d-flex align-start">
+                    <p style="font-size: 14px; margin-top: -3px">{{ step.number }}. {{ step.step }}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -286,13 +344,17 @@
 </template>
 
 <script>
-// import axios from 'axios';
-
 export default {
   props: ['id'],
 
   data() {
     return {
+      occasionsItems: {
+        fall: 'mdi-leaf-maple',
+        winter: 'mdi-snowflake',
+        summer: 'mdi-weather-sunny',
+        spring: 'mdi-leaf'
+      },
       currentServings: 1,
       isMetric: true,
       scale: 'metric',
