@@ -43,11 +43,9 @@
         <!-- Input area -->
         <v-divider />
         <v-card-actions class="pa-4 d-flex flex-column">
-          <v-textarea
+          <v-text-field
             v-model="message"
-            label="Ask me anything about food..."
-            auto-grow
-            rows="2"
+            label="Say something"
             outlined
             class="w-100"
           />
