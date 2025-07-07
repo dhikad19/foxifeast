@@ -119,7 +119,6 @@
         @update:model-value="onSelect" />
     </div>
   </v-app-bar>
-  <ChatBot />
   <v-navigation-drawer style="margin-top: -1px" v-model="drawer" temporary>
     <v-list>
       <v-list-item
@@ -146,7 +145,6 @@
   import { useRecipeStore } from "@/stores/recipeSearch";
   import { useAuthStore } from "@/stores/authStore";
   import axios from "axios";
-  import ChatBot from "@/components/ChatBot";
 
   export default {
     name: "NavbarComponent",
@@ -177,10 +175,6 @@
         ],
         items: ["Home", "Recipes", "Blog"],
       };
-    },
-
-    components: {
-      ChatBot,
     },
 
     computed: {
