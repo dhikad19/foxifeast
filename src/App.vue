@@ -9,6 +9,7 @@
   </v-app>
 </template>
 
+
 <script>
 import NavbarComponent from "@/components/Navbar";
 

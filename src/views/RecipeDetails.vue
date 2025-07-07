@@ -152,7 +152,13 @@
         <v-chip v-if="recipe.vegan" color="deep-purple" text-color="white" size="small">Vegan</v-chip>
         <v-chip v-if="recipe.vegetarian" color="orange" text-color="white" size="small">Vegetarian</v-chip>
       </div>
-
+      <v-btn
+        :icon="true"
+        :color="isFav ? 'red' : 'grey'"
+        @click="toggleFavorite"
+      >
+        <v-icon>{{ isFav ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+      </v-btn>
       <div>
         <div v-if="recipe.summary && $vuetify.display.mobile" class="summary-container">
           <transition name="expand">
@@ -344,6 +350,8 @@
 </template>
 
 <script>
+import { useFavoritesStore } from "@/stores/favoritesStore";
+import { useAuthStore } from "@/stores/authStore";
 export default {
   props: ['id'],
 
@@ -956,6 +964,22 @@ export default {
   },
 
   methods: {
+    async toggleFavorite() {
+      const authStore = useAuthStore();
+      const favoritesStore = useFavoritesStore();
+
+      if (!authStore.user) {
+        this.$router.push("/login");
+        return;
+      }
+
+      if (favoritesStore.isFavorite(this.recipe.id)) {
+        await favoritesStore.removeFavorite(this.recipe.id);
+      } else {
+        await favoritesStore.addFavorite(this.recipe);
+      }
+    },
+
     centsToUSD(cents) {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -998,6 +1022,10 @@ export default {
   },
 
   computed: {
+    isFav() {
+      const store = useFavoritesStore();
+      return store.isFavorite(this.recipe.id);
+    },
     shortSummary() {
       const div = document.createElement('div')
       div.innerHTML = this.recipe.summary
@@ -1028,17 +1056,19 @@ export default {
   },
   },
 
-  // async created() {
-  //   const apiKey = process.env.VUE_APP_SPOONACULAR_API_KEY;
-  //   const url = `https://api.spoonacular.com/recipes/${this.id}/information?apiKey=${apiKey}`;
-  //   try {
-  //     const response = await axios.get(url);
-  //     this.recipe = response.data;
-  //     this.currentServings = this.recipe.servings;
-  //   } catch (error) {
-  //     console.error('Error fetching recipe details:', error);
-  //   }
-  // },
+  async created() {
+    const store = useFavoritesStore();
+    await store.loadFavorites();
+    // const apiKey = process.env.VUE_APP_SPOONACULAR_API_KEY;
+    // const url = `https://api.spoonacular.com/recipes/${this.id}/information?apiKey=${apiKey}`;
+    // try {
+    //   const response = await axios.get(url);
+    //   this.recipe = response.data;
+    //   this.currentServings = this.recipe.servings;
+    // } catch (error) {
+    //   console.error('Error fetching recipe details:', error);
+    // }
+  },
 };
 </script>
 

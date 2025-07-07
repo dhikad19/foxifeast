@@ -34,6 +34,17 @@
           @update:model-value="onSelect"
         />
         <div class="d-flex align-center">
+          <div class="d-flex align-center">
+            <!-- Jangan akses authStore langsung jika masih null -->
+            <div v-if="authStore && authStore.initialized">
+              <div v-if="authStore.user" class="d-flex align-center">
+                <v-img class="mr-1" style="border-radius: 50%" max-height="25" width="25" :to="'/profile'" :src="user.photoURL" alt="User Photo" />
+                <p style="font-weight: 500">{{user.displayName.split(' ')[0]}}</p>
+              </div>
+              <v-btn v-else text :to="'/login'">Login</v-btn>
+            </div>
+          </div>      
+
           <v-icon :class="$vuetify.display.mobile ? 'mr-4 mb-1' : ''" @click="toggleTheme">{{ isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}</v-icon>
         </div>
       </div>
@@ -71,7 +82,7 @@
       />
     </div>
   </v-app-bar>
-
+<ChatBot />
   <v-navigation-drawer
     style="margin-top: -1px"
     v-model="drawer"
@@ -102,9 +113,13 @@
 
 <script>
 import { useRecipeStore } from "@/stores/recipeSearch";
+import { useAuthStore } from "@/stores/authStore";
 import axios from "axios"
+import ChatBot from '@/components/ChatBot'
+
 export default {
   name: "NavbarComponent",
+
   data() {
     return {
       selectedRecipe: null,
@@ -113,6 +128,7 @@ export default {
       loading: false,
       cancelToken: null,
       drawer: false,
+      authStore: null,
       search: "",
       headerAdditional: [
         {
@@ -131,13 +147,22 @@ export default {
       items: ["Home", "Recipes", "Blog"],
     };
   },
+
+  components: {
+    ChatBot
+  },
+
   computed: {
     isDark() {
       return this.$vuetify.theme.global.name === "dark";
     },
+    user() {
+      return useAuthStore().user;
+    },
   },
 
   mounted() {
+    this.authStore = useAuthStore();
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       this.$vuetify.theme.global.name = savedTheme;
@@ -183,6 +208,13 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    logout() {
+      const store = useAuthStore();
+      store.logout().then(() => {
+        this.$router.push("/login");
+      });
     },
 
     onSelect(item) {
