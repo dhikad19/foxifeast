@@ -10,7 +10,12 @@
           @click.stop="drawer = !drawer"
           >{{ drawer ? "mdi-close" : "mdi-menu" }}</v-icon
         >
-        <v-img src="/assets/logo.png" @click="handleHome" max-height="35" min-width="35"></v-img>
+        <v-img
+          src="/assets/logo.png"
+          style="cursor: pointer"
+          @click="handleHome"
+          max-height="35"
+          min-width="35"></v-img>
         <div
           v-if="!$vuetify.display.smAndDown"
           class="d-flex align-center ml-4"
@@ -30,7 +35,7 @@
           item-value="id"
           return-object
           no-filter
-          class="mx-auto mr-4"
+          class="mx-auto mr-3"
           style="min-width: 350px; margin-bottom: -22px"
           v-if="!$vuetify.display.smAndDown"
           hide-no-data
@@ -47,40 +52,53 @@
           <div class="d-flex align-center">
             <!-- Jangan akses authStore langsung jika masih null -->
             <div v-if="authStore && authStore.initialized">
-              <div 
+              <div
                 @click="toProfile"
-                v-if="authStore.user" 
+                v-if="authStore.user"
                 class="d-flex align-center button-profile"
                 :style="
-                      $vuetify.theme.global.name === 'dark'
-                        ? 'background-color: #4f4f4f; '
-                        : 'background-color: #fafafa; '
-                    "
-              >
+                  $vuetify.theme.global.name === 'dark'
+                    ? 'background-color: #4f4f4f; '
+                    : 'background-color: #fafafa; '
+                ">
                 <v-img
                   v-if="user.photoURL"
-                  class="mr-1"
-                  style="border-radius: 50%;"
-                  max-height="25"
-                  width="25"
+                  class="mr-2"
+                  style="border-radius: 50%; max-height: 20px; width: 20px"
                   :to="'/profile'"
                   :src="user.photoURL"
                   alt="User Photo" />
-                <p style="font-size: 15px; line-height: normal">
+                <p
+                  style="font-size: 15px; line-height: normal; margin-top: 2px">
                   {{ user.displayName.split(" ")[0] }}
                 </p>
               </div>
-              <v-btn v-else text :to="'/login'">Login</v-btn>
+              <div
+                v-else
+                text
+                :to="'/login'"
+                class="button-profile"
+                :style="
+                  $vuetify.theme.global.name === 'dark'
+                    ? 'background-color: #4f4f4f; '
+                    : 'background-color: #fafafa; '
+                ">
+                <p style="font-size: 15px; line-height: normal">Login</p>
+              </div>
             </div>
           </div>
-          <div 
-            @click="toggleTheme" 
-            class="toggle-mode" 
+
+          <div
+            @click="toggleTheme"
+            class="toggle-mode"
             :class="$vuetify.display.smAndDown ? 'mb-1' : ''"
-            :style="!isDark ? 'background-color: #fafafa' : 'background-color: #4f4f4f'"
-          >
-            <v-icon style="font-size: 18px;">
-              {{isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night'}}
+            :style="
+              !isDark
+                ? 'background-color: #fafafa'
+                : 'background-color: #4f4f4f'
+            ">
+            <v-icon style="font-size: 18px">
+              {{ isDark ? "mdi-white-balance-sunny" : "mdi-weather-night" }}
             </v-icon>
           </div>
         </div>
@@ -213,11 +231,11 @@
 
     methods: {
       toProfile() {
-        this.$router.push('/profile')
+        this.$router.push("/profile");
       },
 
       handleHome() {
-        this.$router.push('/')
+        this.$router.push("/");
       },
 
       async onSearch(query) {
@@ -289,6 +307,9 @@
 <style scope>
   .button-profile {
     padding: 10px;
+    cursor: pointer;
+    padding-left: 15px;
+    padding-right: 15px;
     margin-bottom: 2px;
     border-radius: 20px;
   }

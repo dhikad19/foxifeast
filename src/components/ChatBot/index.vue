@@ -18,7 +18,10 @@
         <v-divider />
 
         <!-- Chat window -->
-        <v-card-text ref="chatWindow" class="chat-window">
+        <v-card-text
+          v-if="messages.length"
+          ref="chatWindow"
+          class="chat-window">
           <div v-for="(msg, i) in messages" :key="i" class="mb-4">
             <!-- User Message -->
             <div v-if="msg.from === 'user'" class="text-right">
@@ -52,25 +55,33 @@
           </div>
         </v-card-text>
         <div
-          v-if="messages.length == 0"
-          class="d-flex align-center flex-column mb-8">
-          <v-icon class="mb-2" style="font-size: 40px">
-            mdi-forum-outline
-          </v-icon>
-          <p>Say something like "Donut"</p>
+          class="d-flex flex-column justify-space-between"
+          :class="messages.length ? '' : 'h-100'">
+          <div></div>
+          <div
+            v-if="!messages.length"
+            :class="$vuetify.display.smAndDown ? '' : 'mt-8'"
+            class="d-flex align-center flex-column mb-8">
+            <v-icon class="mb-4" style="font-size: 40px">
+              mdi-forum-outline
+            </v-icon>
+            <p>Say something like "Donut with sprinkles"</p>
+          </div>
+          <!-- Input area -->
+          <div>
+            <v-divider />
+            <v-card-actions class="pa-4 d-flex flex-column">
+              <v-text-field
+                v-model="message"
+                placeholder="Say something"
+                hide-details
+                variant="solo"
+                density="compact"
+                @keyup.enter="sendMessage"
+                class="w-100" />
+            </v-card-actions>
+          </div>
         </div>
-        <!-- Input area -->
-        <v-divider />
-        <v-card-actions class="pa-4 d-flex flex-column">
-          <v-text-field
-            v-model="message"
-            placeholder="Say something"
-            hide-details
-            variant="solo"
-            density="compact"
-            @keyup.enter="sendMessage"
-            class="w-100" />
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
