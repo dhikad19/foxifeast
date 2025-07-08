@@ -3,13 +3,13 @@
     <!-- <v-btn @click="$router.back()" variant="outlined" class="mb-4">Back</v-btn> -->
 
     <v-card variant="text" v-if="recipe">
-      <v-row :class="$vuetify.display.mobile ? '' : 'mt-6'">
-        <v-col :cols="$vuetify.display.mobile ? 12 : 6">
+      <v-row :class="$vuetify.display.smAndDown ? '' : 'mt-6'">
+        <v-col :cols="$vuetify.display.smAndDown ? 12 : 6">
           <v-img
             style="border-radius: 4px"
             :src="recipe.image"
             :alt="recipe.title"
-            :height="$vuetify.display.mobile ? '250px' : '350px'"
+            :height="$vuetify.display.smAndDown ? '250px' : '350px'"
             cover
             class="mb-3">
             <v-btn
@@ -35,7 +35,7 @@
             Download Recipe
           </v-btn>
         </v-col>
-        <v-col cols="6" v-if="!$vuetify.display.mobile">
+        <v-col cols="6" v-if="!$vuetify.display.smAndDown">
           <v-row :dense="true">
             <v-col cols="3">
               <div
@@ -213,7 +213,7 @@
       </v-btn>
       <div>
         <div
-          v-if="recipe.summary && $vuetify.display.mobile"
+          v-if="recipe.summary && $vuetify.display.smAndDown"
           class="summary-container">
           <transition name="expand">
             <div
@@ -242,11 +242,11 @@
           </div>
         </div>
         <div
-          v-else-if="recipe.summary && !$vuetify.display.mobile"
+          v-else-if="recipe.summary && !$vuetify.display.smAndDown"
           v-html="recipe.summary"></div>
 
-        <v-row :dense="true" class="mt-4" v-if="$vuetify.display.mobile">
-          <v-col :cols="$vuetify.display.mobile ? 3 : 4">
+        <v-row :dense="true" class="mt-4" v-if="$vuetify.display.smAndDown">
+          <v-col :cols="$vuetify.display.smAndDown ? 3 : 4">
             <div
               class="d-flex align-center pa-2 justify-center flex-column"
               style="border-radius: 4px; background-color: #ffff002c">
@@ -257,7 +257,7 @@
               </span>
             </div>
           </v-col>
-          <v-col :cols="$vuetify.display.mobile ? 3 : 4">
+          <v-col :cols="$vuetify.display.smAndDown ? 3 : 4">
             <div
               class="d-flex align-center pa-2 justify-center flex-column"
               style="border-radius: 4px; background-color: #ff000041">
@@ -277,7 +277,7 @@
               </span>
             </div>
           </v-col>
-          <v-col :cols="$vuetify.display.mobile ? 3 : 4">
+          <v-col :cols="$vuetify.display.smAndDown ? 3 : 4">
             <div
               class="d-flex align-center pa-2 justify-center flex-column"
               style="border-radius: 4px; background-color: #80008067">
@@ -288,7 +288,7 @@
               </span>
             </div>
           </v-col>
-          <v-col :cols="$vuetify.display.mobile ? 3 : 4">
+          <v-col :cols="$vuetify.display.smAndDown ? 3 : 4">
             <div
               class="d-flex align-center pa-2 justify-center flex-column"
               style="border-radius: 4px; background-color: #ffa60077">
@@ -379,7 +379,7 @@
         </v-row>
 
         <v-row class="mb-4 mt-4">
-          <v-col :cols="$vuetify.display.mobile ? 12 : 6">
+          <v-col :cols="$vuetify.display.smAndDown ? 12 : 6">
             <div v-if="recipe.extendedIngredients">
               <p class="mb-2" style="font-weight: bold">Ingredients</p>
               <div
@@ -402,7 +402,7 @@
               </div>
             </div>
           </v-col>
-          <v-col :cols="$vuetify.display.mobile ? 12 : 6">
+          <v-col :cols="$vuetify.display.smAndDown ? 12 : 6">
             <div v-if="recipe.analyzedInstructions?.length">
               <p class="mb-2" style="font-weight: bold">Step</p>
               <div

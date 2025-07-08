@@ -2,7 +2,7 @@
   <v-app>
     <NavbarComponent />
     <v-main>
-      <div :class="$vuetify.display.mobile ? 'pa-4' : ''" style="max-width: 1140px; width: 100%;" class="mx-auto">
+      <div :class="$vuetify.display.smAndDown ? 'pa-4' : 'pa-4'" style="max-width: 1140px; width: 100%;" class="mx-auto">
         <router-view />
       </div>
     </v-main>

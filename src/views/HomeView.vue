@@ -1,6 +1,7 @@
 <template>
   <div>
-    <BannerGrid />
+    <Carousel />
+    <!-- <BannerGrid /> -->
     <Random />
     <BannerType />
     <ChatBot />
@@ -8,13 +9,15 @@
 </template>
 
 <script>
+  import Carousel from "@/components/Carousel"
   import ChatBot from "@/components/ChatBot/Float";
   import Random from "@/components/Random";
-  import BannerGrid from "@/components/Banner/BannerGrid.vue";
+  // import BannerGrid from "@/components/Banner/BannerGrid.vue";
   import BannerType from "@/components/Banner/BannerType.vue";
   export default {
     components: {
-      BannerGrid,
+      Carousel,
+      // BannerGrid,
       BannerType,
       Random,
       ChatBot,

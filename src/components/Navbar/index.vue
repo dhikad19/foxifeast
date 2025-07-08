@@ -1,21 +1,21 @@
 <template>
   <v-app-bar app elevation="0">
     <div
-      class="d-flex align-center justify-space-between mx-auto"
+      class="d-flex align-center justify-space-between mx-auto pl-4 pr-4"
       style="max-width: 1140px; width: 100%">
       <div class="d-flex align-center">
         <v-icon
-          class="ml-4 mr-4"
-          v-if="$vuetify.display.mobile"
+          class="mr-4"
+          v-if="$vuetify.display.smAndDown"
           @click.stop="drawer = !drawer"
           >{{ drawer ? "mdi-close" : "mdi-menu" }}</v-icon
         >
-        <v-img src="/assets/logo.png" max-height="35" min-width="35"></v-img>
+        <v-img src="/assets/logo.png" @click="handleHome" max-height="35" min-width="35"></v-img>
         <div
-          v-if="!$vuetify.display.mobile"
+          v-if="!$vuetify.display.smAndDown"
           class="d-flex align-center ml-4"
-          :style="$vuetify.display.mobile ? 'gap: 10px' : 'gap: 20px'"
-          :class="$vuetify.display.mobile ? 'mr-4' : ''">
+          :style="$vuetify.display.smAndDown ? 'gap: 10px' : 'gap: 20px'"
+          :class="$vuetify.display.smAndDown ? '' : ''">
           <div v-for="(item, i) in items" :key="i" style="font-size: 15px">
             {{ item }}
           </div>
@@ -32,7 +32,7 @@
           no-filter
           class="mx-auto mr-4"
           style="min-width: 350px; margin-bottom: -22px"
-          v-if="!$vuetify.display.mobile"
+          v-if="!$vuetify.display.smAndDown"
           hide-no-data
           :hide-details="false"
           density="compact"
@@ -47,50 +47,62 @@
           <div class="d-flex align-center">
             <!-- Jangan akses authStore langsung jika masih null -->
             <div v-if="authStore && authStore.initialized">
-              <div v-if="authStore.user" class="d-flex align-center">
+              <div 
+                @click="toProfile"
+                v-if="authStore.user" 
+                class="d-flex align-center button-profile"
+                :style="
+                      $vuetify.theme.global.name === 'dark'
+                        ? 'background-color: #4f4f4f; '
+                        : 'background-color: #fafafa; '
+                    "
+              >
                 <v-img
+                  v-if="user.photoURL"
                   class="mr-1"
-                  style="border-radius: 50%"
+                  style="border-radius: 50%;"
                   max-height="25"
                   width="25"
                   :to="'/profile'"
                   :src="user.photoURL"
                   alt="User Photo" />
-                <p style="font-weight: 500">
+                <p style="font-size: 15px; line-height: normal">
                   {{ user.displayName.split(" ")[0] }}
                 </p>
               </div>
               <v-btn v-else text :to="'/login'">Login</v-btn>
             </div>
           </div>
-
-          <v-icon
-            :class="$vuetify.display.mobile ? 'mr-4 mb-1' : ''"
-            @click="toggleTheme"
-            >{{
-              isDark ? "mdi-white-balance-sunny" : "mdi-weather-night"
-            }}</v-icon
+          <div 
+            @click="toggleTheme" 
+            class="toggle-mode" 
+            :class="$vuetify.display.smAndDown ? 'mb-1' : ''"
+            :style="!isDark ? 'background-color: #fafafa' : 'background-color: #4f4f4f'"
           >
+            <v-icon style="font-size: 18px;">
+              {{isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night'}}
+            </v-icon>
+          </div>
         </div>
       </div>
     </div>
   </v-app-bar>
-  <v-divider v-if="!$vuetify.display.mobile"></v-divider>
+  <v-divider v-if="!$vuetify.display.smAndDown"></v-divider>
   <v-app-bar
     app
     elevation="5"
-    :style="$vuetify.display.mobile ? 'margin-top: -1px;' : ''"
+    :style="$vuetify.display.smAndDown ? 'margin-top: -1px;' : ''"
     scroll-behavior="hide"
-    :height="$vuetify.display.mobile ? 65 : 45">
-    <div style="width: 100%" v-if="!$vuetify.display.mobile">
+    :height="$vuetify.display.smAndDown ? 65 : 45">
+    <div style="width: 100%" v-if="!$vuetify.display.smAndDown">
       <v-divider style="margin-top: -14px"></v-divider>
       <div
-        :class="$vuetify.display.mobile ? 'ml-4' : ''"
-        class="d-flex align-center justify-space-between mx-auto mt-2"
+        :class="$vuetify.display.smAndDown ? 'ml-4' : ''"
+        class="d-flex align-center justify-space-between mx-auto mt-2 pl-4 pr-4"
         style="max-width: 1140px; width: 100%">
         <div
           class="d-flex align-center"
-          :style="$vuetify.display.mobile ? 'gap: 10px' : 'gap: 20px'">
+          :style="$vuetify.display.smAndDown ? 'gap: 10px' : 'gap: 20px'">
           <div
             v-for="(item, i) in headerAdditional"
             :key="i"
@@ -200,6 +212,14 @@
     },
 
     methods: {
+      toProfile() {
+        this.$router.push('/profile')
+      },
+
+      handleHome() {
+        this.$router.push('/')
+      },
+
       async onSearch(query) {
         this.query = query;
 
@@ -267,6 +287,20 @@
 </script>
 
 <style scope>
+  .button-profile {
+    padding: 10px;
+    margin-bottom: 2px;
+    border-radius: 20px;
+  }
+  .toggle-mode {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+    justify-content: center;
+    border-radius: 50%;
+  }
   .text-decoration-none {
     text-decoration: none;
   }

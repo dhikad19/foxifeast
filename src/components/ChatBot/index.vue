@@ -2,12 +2,12 @@
   <div>
     <v-dialog
       v-model="localDialog"
-      :fullscreen="$vuetify.display.mobile"
+      :fullscreen="$vuetify.display.smAndDown"
       persistent
       scrollable>
       <v-card
         class="pa-0 w-100"
-        :class="$vuetify.display.mobile ? '' : 'mx-auto mt-10 rounded-lg'"
+        :class="$vuetify.display.smAndDown ? '' : 'mx-auto mt-10 rounded-lg'"
         max-width="600">
         <div class="d-flex align-center justify-space-between">
           <v-card-title style="font-size: 18px" class="font-bold">

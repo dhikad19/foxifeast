@@ -1,21 +1,16 @@
 <template>
   <div>
-    <p class="mt-6 mb-6" style="font-weight: bold; font-size: 25px">
+    <p class="mt-6 mb-3" :style="$vuetify.display.smAndDown ? 'font-size: 20px' : 'font-size: 25px'" style="font-weight: bold;">
       Let Fate Choose Your Meal!
     </p>
-    <v-row>
-      <v-col cols="8">
+    <v-row :dense="$vuetify.display.smAndDown">
+      <v-col :cols="$vuetify.display.smAndDown ? 12 : 8">
         <v-sheet
-          class="pa-6"
+          :class="$vuetify.display.smAndDown ? 'pa-4' : 'pa-6'"
           height="100%"
+          style="border-radius: 4px"
           elevation="0"
-          style="
-            background-image: url('/assets/grid/background.jpg');
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            border-radius: 6px;
-          ">
+          :style="$vuetify.theme.global.name === 'dark' ? 'background: linear-gradient(135deg, #ff7800, #ffb300);' : 'background: linear-gradient(135deg, #ff9800, #ffb300);'">
           <!-- overlay gelap tipis -->
           <!-- <div
             :style="
@@ -46,8 +41,9 @@
                 v-model="selectedType"
                 :items="types"
                 label="Type"
-                variant="solo"
+                
                 hide-details
+                
                 item-title="text"
                 item-value="value"
                 density="compact"
@@ -60,8 +56,9 @@
                 label="Diet"
                 item-title="text"
                 item-value="value"
-                variant="solo"
+                
                 hide-details
+                
                 density="compact"
                 clearable></v-select>
             </v-col>
@@ -72,29 +69,40 @@
                 item-title="text"
                 item-value="value"
                 label="Cuisine"
-                variant="solo"
+                
                 hide-details
+                
                 density="compact"
                 clearable></v-select>
             </v-col>
           </v-row>
 
           <v-btn
-            variants="tonal"
             class="mt-4 mb-2"
+            elevation="0"
+            color="white"
             style="letter-spacing: normal; text-transform: capitalize"
             :loading="loading"
             block
-            @click="generateRandomRecipe">
-            Generate Random Recipe
+            @click="generateRandomRecipe"
+            >
+              <p :style="$vuetify.theme.global.name === 'dark' ? 'color: #ff7800;' : 'color: #ff7800'">
+                Generate Random Recipe
+              </p>
           </v-btn>
         </v-sheet>
       </v-col>
-      <v-col cols="4">
-        <div
+      <v-col
+  :cols="$vuetify.display.smAndDown ? 12 : 4"
+  class="fade-area"
+>
+  <transition name="fade">
+    <v-card
+          elevation="0"
           v-if="recipe"
           :to="`/recipe/${recipe.id}`"
-          style="border-radius: 6px"
+          style="border-radius: 4px; height: 200px;"
+          class="fade-in"
           :style="
             $vuetify.theme.global.name === 'dark'
               ? 'background-color: #4f4f4f; '
@@ -102,16 +110,33 @@
           ">
           <v-img
             cover
+            position="center"
+            style="border-radius: 4px"
             :src="recipe.image"
-            style="border-top-left-radius: 6px; border-top-right-radius: 6px"
-            height="170"></v-img>
+            height="160"
+            >
+          </v-img>
           <div class="pa-2">
             <p style="text-transform: capitalize">
               {{ recipe.title }}
             </p>
           </div>
-        </div>
-      </v-col>
+        </v-card>
+  </transition>
+
+  <!-- Static content saat belum ada hasil -->
+  <div v-if="!recipe && !$vuetify.display.smAndDown" style="height: 200px; border-radius: 4px" class="text-center pa-4 d-flex flex-column align-center justify-center" :style="
+  $vuetify.theme.global.name === 'dark'
+    ? 'background-color: #4f4f4f; '
+    : 'background-color: #fafafa; '
+">
+    <v-icon size="40" class="mb-2" color="grey">mdi-help-circle-outline</v-icon>
+    <p class="text-subtitle-1 font-weight-medium">No recipe yet</p>
+    <p class="text-caption text-grey">
+      Select filters and click "Generate Random Recipe"
+    </p>
+  </div>
+</v-col>
     </v-row>
   </div>
 </template>
@@ -123,12 +148,7 @@
     name: "RandomRecipe",
     data() {
       return {
-        recipe: {
-          id: 715415,
-          title: "Red Lentil Soup with Chicken and Turnips",
-          image: "https://img.spoonacular.com/recipes/715415-312x231.jpg",
-          imageType: "jpg",
-        },
+        recipe: null,
         loading: false,
         selectedType: null,
         selectedDiet: null,
@@ -227,3 +247,10 @@
     },
   };
 </script>
+
+<style scope>
+.no-shadow.v-input {
+  --v-shadow: none !important;
+  box-shadow: none !important;
+}
+</style>
