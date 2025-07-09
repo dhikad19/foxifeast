@@ -71,7 +71,7 @@
                   alt="User Photo" />
                 <p
                   style="font-size: 15px; line-height: normal; margin-top: 2px">
-                  {{ user.displayName.split(" ")[0] }}
+                  {{ user.displayName }}
                 </p>
               </div>
               <div

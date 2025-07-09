@@ -2,8 +2,8 @@
   <div>
     <Carousel />
     <!-- <BannerGrid /> -->
-    <Random />
     <BannerType />
+    <Random />
     <ChatBot />
   </div>
 </template>
