@@ -112,13 +112,13 @@
                 ? 'background-color: #4f4f4f; '
                 : 'background-color: #fafafa; '
             ">
-            <v-img
+            <img
               cover
               position="center"
+              referrerPolicy="no-referrer"
               style="border-radius: 4px"
               :src="recipe.image"
-              height="160">
-            </v-img>
+              height="160" />
             <div class="pa-2">
               <p style="text-transform: capitalize">
                 {{ recipe.title }}

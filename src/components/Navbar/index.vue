@@ -64,6 +64,7 @@
                 <v-img
                   v-if="user.photoURL"
                   class="mr-2"
+                  referrerpolicy="no-referrer"
                   style="border-radius: 50%; max-height: 20px; width: 20px"
                   :to="'/profile'"
                   :src="user.photoURL"
@@ -76,7 +77,7 @@
               <div
                 v-else
                 text
-                :to="'/login'"
+                @click="handleLogin"
                 class="button-profile"
                 :style="
                   $vuetify.theme.global.name === 'dark'
@@ -236,6 +237,10 @@
 
       handleHome() {
         this.$router.push("/");
+      },
+
+      handleLogin() {
+        this.$router.push("/login")
       },
 
       async onSearch(query) {
