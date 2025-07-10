@@ -54,7 +54,7 @@
             <div v-if="authStore && authStore.initialized">
               <div
                 @click="toProfile"
-                v-if="authStore.user"
+                v-if="authStore.user && authStore.user?.photoURL && authStore.user?.displayName"
                 class="d-flex align-center button-profile"
                 :style="
                   $vuetify.theme.global.name === 'dark'
@@ -70,7 +70,7 @@
                   :src="user.photoURL"
                   alt="User Photo" />
                 <p
-                  style="font-size: 15px; line-height: normal; margin-top: 2px">
+                  style="font-size: 15px; line-height: normal;">
                   {{ user.displayName }}
                 </p>
               </div>
@@ -172,6 +172,7 @@
   </v-navigation-drawer>
 </template>
 
+
 <script>
   import { useRecipeStore } from "@/stores/recipeSearch";
   import { useAuthStore } from "@/stores/authStore";
@@ -188,7 +189,7 @@
         loading: false,
         cancelToken: null,
         drawer: false,
-        authStore: null,
+        authStore: useAuthStore(),
         search: "",
         headerAdditional: [
           {
@@ -213,7 +214,7 @@
         return this.$vuetify.theme.global.name === "dark";
       },
       user() {
-        return useAuthStore().user;
+        return this.authStore.user
       },
     },
 
@@ -231,6 +232,13 @@
     },
 
     methods: {
+      commitBlankData() {
+        const blank = this.blankData
+        Object.entries(blank).forEach(([key, value]) => {
+          this.$store.commit(`customerHolder/${key}`, value)
+        })
+      },
+
       toProfile() {
         this.$router.push("/profile");
       },

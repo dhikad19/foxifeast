@@ -1,12 +1,13 @@
-// router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/HomeView.vue";
 import RecipeDetails from "@/views/RecipeDetails.vue";
 import RecipeList from "@/views/RecipeList.vue";
 import PofileUser from "@/views/UserProfile.vue";
 import LoginPage from "@/views/LoginView.vue";
+import SetUserProfile from "@/views/SetProfile.vue";
 import RegisterPage from "@/views/RegisterView.vue";
 import { useAuthStore } from "@/stores/authStore";
+import { auth } from "@/firebase";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -30,6 +31,12 @@ const routes = [
     name: "Profile",
     component: PofileUser,
     meta: { authOnly: true },
+  },
+  {
+    path: "/setprofile",
+    name: "SetProfile",
+    component: SetUserProfile,
+    meta: { onlyAfterRegister: true }, // <- tambahan ini
   },
   {
     path: "/login",
@@ -67,7 +74,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
-  // Tunggu hingga authStore sudah inisialisasi (mencegah flicker)
+  // Tunggu authStore siap (misalnya sedang loading user dari Firebase)
   if (!authStore.initialized) {
     await new Promise((resolve) => {
       const unwatch = authStore.$subscribe((_, state) => {
@@ -79,14 +86,32 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  // Jika route butuh login, tapi user belum login, redirect ke /login
+  const user = auth.currentUser;
+
+  // Auth-only route: harus login
   if (to.meta.authOnly && !authStore.user) {
     return next("/login");
   }
 
-  // Jika route hanya untuk guest (belum login), tapi user sudah login, redirect ke /
+  // Guest-only route: harus logout
   if (to.meta.guestOnly && authStore.user) {
     return next("/");
+  }
+
+  // ✅ Route hanya boleh diakses setelah register dan belum punya nama/foto
+  if (to.meta.onlyAfterRegister) {
+    if (!user || (user.displayName && user.photoURL)) {
+      return next("/"); // blokir akses langsung
+    }
+  }
+
+  // ⛔ Jika user login tapi belum isi profil, paksa ke /setprofile
+  if (
+    user &&
+    (!user.displayName || !user.photoURL) &&
+    to.name !== "SetProfile"
+  ) {
+    return next({ name: "SetProfile" });
   }
 
   next();

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-8">
+  <div>
     <v-card v-if="user" class="mx-auto max-w-md pa-6 rounded-xl shadow">
       <v-card-title class="text-h6 font-bold">User Profile</v-card-title>
       <v-divider class="my-4" />
@@ -44,15 +44,18 @@
       <v-card-actions class="mt-4">
         <v-btn color="red" @click="logout">Logout</v-btn>
       </v-card-actions>
+
+      <ProfileEdit />
     </v-card>
 
     <div v-else class="text-center text-gray-500">You are not logged in.</div>
-  </v-container>
+  </div>
 </template>
 
 <script>
 import { useAuthStore } from "@/stores/authStore";
 import { useFavoritesStore } from "@/stores/favoritesStore";
+import ProfileEdit from "@/components/Profile/Edit.vue"
 
 export default {
   name: "UserProfile",
@@ -65,6 +68,9 @@ export default {
       return useFavoritesStore().favorites;
     },
 
+  },
+  components: {
+    ProfileEdit
   },
   methods: {
     logout() {

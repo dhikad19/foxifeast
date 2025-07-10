@@ -97,5 +97,10 @@ export const useAuthStore = defineStore("auth", {
         }
       });
     },
+
+    // ✅ Tambahkan ini:
+    setUser(newUser) {
+      this.user = newUser;
+    },
   },
 });

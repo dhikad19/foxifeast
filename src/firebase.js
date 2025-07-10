@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-// Ganti dengan config dari Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyDQ3mAOaBOEiLgfjM0KIzNh4jj9gQVmCek",
   authDomain: "foxifeast.firebaseapp.com",
@@ -14,8 +14,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+export const storage = getStorage(app);
 export { auth, db };

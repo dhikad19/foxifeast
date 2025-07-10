@@ -1,6 +1,6 @@
 <template>
   <v-container class="py-10" style="max-width: 500px">
-    <h2 class="text-h5 mb-6">Edit Your Profile</h2>
+    <h2 class="text-h5 mb-6">Set Your Profile</h2>
 
     <v-text-field
       v-model="displayName"
@@ -10,8 +10,8 @@
 
     <v-file-input
       v-model="avatarFile"
-      label="Change Avatar"
       accept="image/*"
+      label="Upload Avatar"
       prepend-icon="mdi-camera"
       show-size
       counter
@@ -24,9 +24,9 @@
     <v-btn
       :loading="loading"
       color="primary"
-      @click="handleUpdateProfile"
+      @click="handleSetProfile"
     >
-      Update Profile
+      Save Profile
     </v-btn>
   </v-container>
 </template>
@@ -34,11 +34,10 @@
 <script>
 import { useAuthStore } from "@/stores/authStore";
 import { auth, db } from "@/firebase";
-import { doc, updateDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export default {
-  name: "EditProfile",
   data() {
     return {
       displayName: "",
@@ -50,33 +49,28 @@ export default {
     avatarPreview() {
       return this.avatarFile instanceof File
         ? URL.createObjectURL(this.avatarFile)
-        : this.authStore?.user?.photoURL || "";
+        : "";
     },
-    authStore() {
-      return useAuthStore();
-    },
-  },
-  async mounted() {
-    const user = this.authStore.user;
-    if (user) {
-      this.displayName = user.displayName || "";
-    }
   },
   methods: {
     async uploadToCloudinary(file) {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "unsigned_avatar"); // Ganti dengan preset kamu
+      formData.append("upload_preset", "unsigned_avatar"); // GANTI dengan preset kamu
+
       const response = await fetch("https://api.cloudinary.com/v1_1/dmrql0yee/image/upload", {
         method: "POST",
         body: formData,
       });
+
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || "Upload failed");
+      if (!response.ok) {
+        throw new Error(data.error?.message || "Cloudinary upload failed");
+      }
       return data.secure_url;
     },
 
-    async handleUpdateProfile() {
+    async handleSetProfile() {
       const user = auth.currentUser;
       if (!user) {
         alert("No user logged in.");
@@ -85,32 +79,36 @@ export default {
 
       this.loading = true;
       try {
-        let photoURL = user.photoURL;
+        let photoURL = "";
 
         if (this.avatarFile instanceof File) {
           photoURL = await this.uploadToCloudinary(this.avatarFile);
         }
 
-        // Firebase Auth update
+        // Update Firebase Auth profile
         await updateProfile(user, {
           displayName: this.displayName,
           photoURL: photoURL || null,
         });
 
-        // Firestore update
-        await updateDoc(doc(db, "users", user.uid), {
+        // Simpan ke Firestore
+        await setDoc(doc(db, "users", user.uid), {
           displayName: this.displayName,
           photoURL,
-          updatedAt: new Date().toISOString(),
+          email: user.email,
+          createdAt: new Date().toISOString(),
         });
 
+        const authStore = useAuthStore();
         await user.reload();
-        this.authStore.setUser(auth.currentUser); // refresh store
-
-        this.$router.push("/"); // kembali ke home
-      } catch (e) {
-        console.error(e);
-        alert("Profile update failed: " + e.message);
+        const refreshedUser = auth.currentUser;
+        authStore.setUser(refreshedUser);
+        this.$router.push("/").then(() => {
+          window.location.reload();
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Profile setup failed: " + err.message);
       } finally {
         this.loading = false;
       }
