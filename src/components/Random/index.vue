@@ -257,7 +257,7 @@
   };
 </script>
 
-<style scope>
+<style scoped>
   .no-shadow.v-input {
     --v-shadow: none !important;
     box-shadow: none !important;

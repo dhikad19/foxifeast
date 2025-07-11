@@ -1,9 +1,9 @@
 <template>
   <v-row class="mt-8" :dense="$vuetify.display.smAndDown">
     <v-col cols="12">
-      <p style="font-weight: bold;" :style="$vuetify.display.smAndDown ? 'font-size: 20px' : 'font-size: 25px'">Meal Time</p>
+      <p style="font-weight: bold;" :style="$vuetify.display.smAndDown ? 'font-size: 20px' : 'font-size: 25px; margin-bottom: -10px'">Meal Time</p>
     </v-col>
-    <v-col cols="12" class="mt-2">
+    <v-col cols="12" :class="$vuetify.display.smAndDown ? 'mt-2' : ''">
       <div
       style="border-radius: 4px"
         class="d-flex align-center"
@@ -94,7 +94,7 @@
   </v-row>
 </template>
 
-<style scope>
+<style scoped>
   .title {
     margin-top: 10px;
     font-size: 18px;

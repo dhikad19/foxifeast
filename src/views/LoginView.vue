@@ -231,7 +231,7 @@
   };
 </script>
 
-<style scope>
+<style scoped>
 .title-content {
   font-weight: 500;
 }

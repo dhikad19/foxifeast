@@ -317,7 +317,7 @@
   };
 </script>
 
-<style scope>
+<style scoped>
   .button-profile {
     padding: 10px;
     cursor: pointer;

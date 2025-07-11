@@ -27,7 +27,7 @@
   </v-row>
 </template>
 
-<style scope>
+<style scoped>
   .title {
     margin-top: 10px;
     font-size: 18px;

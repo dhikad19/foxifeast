@@ -1,7 +1,7 @@
 <template>
   <div v-if="post">
     <h1 class="text-2xl font-bold mb-4" v-html="post.title"></h1>
-    <div v-html="post.content" class="prose max-w-2xl"></div>
+    <div v-html="post.content"></div>
   </div>
 </template>
 
@@ -36,3 +36,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+img {
+  max-width: 100%; 
+  height: auto;
+}
+</style>
