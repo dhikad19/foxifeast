@@ -6,6 +6,8 @@ import PofileUser from "@/views/UserProfile.vue";
 import LoginPage from "@/views/LoginView.vue";
 import SetUserProfile from "@/views/SetProfile.vue";
 import RegisterPage from "@/views/RegisterView.vue";
+import BlogList from "@/views/BlogList.vue";
+import BlogDetail from "@/views/BlogDetail.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { auth } from "@/firebase";
 
@@ -31,6 +33,17 @@ const routes = [
     name: "Profile",
     component: PofileUser,
     meta: { authOnly: true },
+  },
+  {
+    path: "/blog",
+    name: "blog",
+    component: BlogList,
+  },
+  {
+    path: "/blog/:slug",
+    name: "BlogDetail",
+    component: BlogDetail,
+    props: true,
   },
   {
     path: "/setprofile",

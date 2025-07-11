@@ -338,19 +338,10 @@
   }
 }
 
-.signin-bg {
-  background-image: url("/public/assets/background-blend.png");
-  background-size: cover; /* Cover the entire screen */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat;
-  height: 100vh; /* Full viewport height */
-  width: 100%;
-}
-
 .password-toggle-icon {
   cursor: pointer;
-  font-size: 23px; /* Adjust icon size if needed */
-  position: relative; /* Ensure the icon is positioned correctly */
+  font-size: 23px;
+  position: relative;
 }
 
 .desktop-bg {
@@ -366,6 +357,4 @@
   justify-content: space-between;
   height: 100%;
 }
-
-
 </style>
