@@ -105,7 +105,7 @@
             elevation="0"
             v-if="recipe"
             :to="`/recipe/${recipe.id}`"
-            style="border-radius: 4px; height: 200px"
+            style="border-radius: 4px; height: 207px"
             class="fade-in"
             :style="
               $vuetify.theme.global.name === 'dark'
@@ -118,6 +118,7 @@
               referrerPolicy="no-referrer"
               style="border-radius: 4px"
               :src="recipe.image"
+              width="100%"
               height="160" />
             <div class="pa-2">
               <p style="text-transform: capitalize">

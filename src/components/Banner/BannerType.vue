@@ -1,12 +1,21 @@
 <template>
   <v-row class="mt-8" :dense="$vuetify.display.smAndDown">
     <v-col cols="12">
-      <p style="font-weight: bold;" :style="$vuetify.display.smAndDown ? 'font-size: 20px' : 'font-size: 25px; margin-bottom: -10px'">Meal Time</p>
+      <p
+        style="font-weight: bold"
+        :style="
+          $vuetify.display.smAndDown
+            ? 'font-size: 20px'
+            : 'font-size: 25px; margin-bottom: -10px'
+        ">
+        Meal Time
+      </p>
     </v-col>
     <v-col cols="12" :class="$vuetify.display.smAndDown ? 'mt-2' : ''">
       <div
-      style="border-radius: 4px"
-        class="d-flex align-center"
+        style="border-radius: 4px"
+        @click="handleDinner"
+        class="d-flex align-center cursor-pointer"
         :class="$vuetify.display.smAndDown ? 'flex-column' : ''"
         :style="
           $vuetify.theme.global.name === 'dark'
@@ -20,7 +29,9 @@
           src="/assets/grid/breakfast.png"></v-img>
         <div class="pa-4">
           <span class="title">Hearty Dinner Recipes to End Your Day Right</span>
-          <p class="mt-4" :class="$vuetify.display.smAndDown ? 'description' : ' '">
+          <p
+            class="mt-4"
+            :class="$vuetify.display.smAndDown ? 'description' : ' '">
             End your day with comforting, satisfying meals made from simple
             ingredients. These dinner recipes are perfect for winding down,
             whether you’re cooking for family or enjoying a solo night in. From
@@ -32,8 +43,9 @@
     </v-col>
     <v-col cols="12" class="mt-2">
       <div
-      style="border-radius: 4px"
-        class="d-flex align-center"
+        style="border-radius: 4px"
+        @click="handleLunch"
+        class="d-flex align-center cursor-pointer"
         :class="$vuetify.display.smAndDown ? 'flex-column-reverse' : ''"
         :style="
           $vuetify.theme.global.name === 'dark'
@@ -44,7 +56,9 @@
           <span class="title"
             >Quick and Tasty Lunch Ideas for Midday Energy</span
           >
-          <p class="mt-4" :class="$vuetify.display.smAndDown ? 'description' : ' '">
+          <p
+            class="mt-4"
+            :class="$vuetify.display.smAndDown ? 'description' : ' '">
             Fuel your afternoon with these easy and delicious lunch recipes.
             Designed for busy schedules and hungry appetites, these meals offer
             a balance of nutrition and flavor — perfect for workdays, school, or
@@ -61,8 +75,9 @@
     </v-col>
     <v-col cols="12" class="mt-2">
       <div
-      style="border-radius: 4px"
-        class="d-flex align-center"
+        style="border-radius: 4px"
+        @click="handleBreakfast"
+        class="d-flex align-center cursor-pointer"
         :class="$vuetify.display.smAndDown ? 'flex-column' : ''"
         :style="
           $vuetify.theme.global.name === 'dark'
@@ -78,7 +93,9 @@
           <span class="title"
             >Bright Mornings: Breakfast Recipes to Start Fresh</span
           >
-          <p class="mt-4" :class="$vuetify.display.smAndDown ? 'description' : ' '">
+          <p
+            class="mt-4"
+            :class="$vuetify.display.smAndDown ? 'description' : ' '">
             Jumpstart your day with energizing and wholesome breakfast dishes.
             Whether you prefer something sweet, savory, light, or hearty — these
             recipes are made to brighten your mornings and keep you full until
@@ -93,6 +110,22 @@
     </v-col>
   </v-row>
 </template>
+
+<script>
+  export default {
+    methods: {
+      handleDinner() {
+        this.$router.push("/recipe-list/dinner");
+      },
+      handleLunch() {
+        this.$router.push("/recipe-list/lunch");
+      },
+      handleBreakfast() {
+        this.$router.push("/recipe-list/breakfast");
+      },
+    },
+  };
+</script>
 
 <style scoped>
   .title {

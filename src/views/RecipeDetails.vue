@@ -23,17 +23,16 @@
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
           </v-img>
-          <v-btn
-            variant="tonal"
-            color="#ff7800"
-            class="mt-4 mb-4"
-            style="letter-spacing: normal; text-transform: capitalize"
-            :loading="loading"
-            block
-            elevation="0"
-            @click="downloadRecipeCard(recipe.id)">
-            Download Recipe
-          </v-btn>
+          <div class="d-flex align-center mt-4 mb-8">
+            <div class="download-btn" @click="downloadRecipeCard(recipe.id)">
+              Download Recipe
+            </div>
+            <div @click="toggleFavorite" class="save-btn ml-2">
+              <v-icon>{{
+                isFav ? "mdi-bookmark-check" : "mdi-bookmark-check-outline"
+              }}</v-icon>
+            </div>
+          </div>
         </v-col>
         <v-col cols="6" v-if="!$vuetify.display.smAndDown">
           <v-row :dense="true">
@@ -205,12 +204,6 @@
           >Vegetarian</v-chip
         >
       </div>
-      <v-btn
-        :icon="true"
-        :color="isFav ? 'red' : 'grey'"
-        @click="toggleFavorite">
-        <v-icon>{{ isFav ? "mdi-heart" : "mdi-heart-outline" }}</v-icon>
-      </v-btn>
       <div>
         <div
           v-if="recipe.summary && $vuetify.display.smAndDown"
@@ -574,6 +567,28 @@
 </script>
 
 <style scoped>
+  .save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    width: 100%;
+    border: 2px solid #ff7800;
+    border-radius: 4px;
+    color: #ff7800;
+    max-width: 40px;
+  }
+  .download-btn {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: center;
+    height: 35px;
+    width: 100%;
+    border-radius: 4px;
+    background-color: #ff7800;
+  }
   .step-number {
     font-size: 12px;
     line-height: normal;

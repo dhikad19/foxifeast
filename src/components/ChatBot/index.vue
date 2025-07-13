@@ -1,19 +1,25 @@
 <template>
   <div>
+    <v-btn class="chat-fab" color="#ff7800" icon @click="dialog = true">
+      <v-icon>mdi-robot</v-icon>
+    </v-btn>
     <v-dialog
-      v-model="localDialog"
+      scrim="true"
+      :persistent="false"
+      v-model="dialog"
       :fullscreen="$vuetify.display.smAndDown"
-      persistent
       scrollable>
       <v-card
+        @click:outside="dialog = false"
         class="pa-0 w-100"
+        max-height="90vh"
         :class="$vuetify.display.smAndDown ? '' : 'mx-auto mt-10 rounded-lg'"
         max-width="600">
         <div class="d-flex align-center justify-space-between">
           <v-card-title style="font-size: 18px" class="font-bold">
             Feast Bot
           </v-card-title>
-          <v-icon class="pr-4" @click="localDialog = false">mdi-close</v-icon>
+          <v-icon class="pr-4" @click="dialog = false">mdi-close</v-icon>
         </div>
         <v-divider />
 
@@ -65,7 +71,7 @@
             <v-icon class="mb-4" style="font-size: 40px">
               mdi-forum-outline
             </v-icon>
-            <p>Say something like "Donut with sprinkles"</p>
+            <p>Say something like "Donut"</p>
           </div>
           <!-- Input area -->
           <div>
@@ -95,22 +101,11 @@
     data() {
       return {
         message: "",
+        dialog: false,
         messages: [],
         loading: false,
       };
     },
-    computed: {
-      localDialog: {
-        get() {
-          return this.dialog;
-        },
-        set(val) {
-          this.$emit("update:dialog", val);
-        },
-      },
-    },
-    props: { dialog: { type: Boolean, required: true } },
-    emits: ["update:dialog"],
     methods: {
       getRecipeIdFromImg(url) {
         return url.match(/\/recipes\/(\d+)-/)?.[1] ?? "";
@@ -166,5 +161,13 @@
     max-height: 85%;
     overflow-y: auto;
     padding: 16px;
+  }
+
+  .chat-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 2000;
   }
 </style>

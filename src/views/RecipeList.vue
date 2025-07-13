@@ -1,32 +1,38 @@
 <template>
   <div>
-    <h1 class="mb-4">Recipe List for ID: {{ id }}</h1>
+    <p class="mb-4 title-list">Recipe list for {{ id }}</p>
 
     <v-row>
       <v-col
-        v-for="recipe in recipes"
-        :key="recipe.uniqueId"
-        cols="12"
-        md="6"
-        lg="4">
-        <v-card>
-          <v-img :src="recipe.image" :alt="recipe.title" height="200px"></v-img>
-          <v-card-title>{{ recipe.title }}</v-card-title>
-          <v-card-actions>
-            <v-btn :to="`/recipe/${recipe.id}`" color="blue" outlined
-              >View Details</v-btn
-            >
-          </v-card-actions>
-        </v-card>
+        v-for="(recipe, i) in recipes"
+        :key="i"
+        :cols="$vuetify.display.smAndDown ? 12 : 3">
+        <div
+          @click="handleToDetails(recipe.id)"
+          class="cursor-pointer pa-4"
+          style="border-radius: 4px"
+          :style="
+            $vuetify.theme.global.name === 'dark'
+              ? 'background-color: #4f4f4f; '
+              : 'background-color: #fafafa; '
+          ">
+          <v-img
+            cover
+            style="border-radius: 4px"
+            :src="recipe.image"
+            :alt="recipe.title"
+            height="160px"></v-img>
+          <p class="pt-4 title-text">{{ recipe.title }}</p>
+        </div>
       </v-col>
     </v-row>
 
-    <v-row justify="center" class="mt-6" v-if="totalPages > 1">
-      <v-pagination
-        v-model="currentPage"
-        :length="totalPages"
-        @input="handlePageChange"></v-pagination>
-    </v-row>
+    <v-pagination
+      v-if="totalPages > 1"
+      class="mt-8 mb-6"
+      v-model="currentPage"
+      :length="totalPages"
+      @input="handlePageChange"></v-pagination>
 
     <p v-if="!recipes.length" class="text-gray-500 mt-6">No recipes found.</p>
   </div>
@@ -82,6 +88,9 @@
       },
     },
     methods: {
+      handleToDetails(id) {
+        this.$router.push(`/recipe/${id}`);
+      },
       async fetchRecipesById(id, page) {
         const store = useRecipeStore();
         await store.fetchRecipes(id, page, this.perPage);
@@ -95,3 +104,19 @@
     },
   };
 </script>
+
+<style scope>
+  .title-list {
+    font-weight: 500;
+    font-size: 19px;
+  }
+  .title-text {
+    font-size: 14px;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+</style>

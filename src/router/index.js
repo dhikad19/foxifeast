@@ -8,6 +8,7 @@ import SetUserProfile from "@/views/SetProfile.vue";
 import RegisterPage from "@/views/RegisterView.vue";
 import BlogList from "@/views/BlogList.vue";
 import BlogDetail from "@/views/BlogDetail.vue";
+import RecipeCategory from "@/views/RecipeCategory.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { auth } from "@/firebase";
 
@@ -18,6 +19,12 @@ const routes = [
     name: "RecipeDetails",
     component: RecipeDetails,
     props: true,
+  },
+  {
+    path: "/recipe-category/:category",
+    name: "RecipeCategory",
+    component: RecipeCategory,
+    props: true, // agar bisa langsung pakai props kalau mau
   },
   {
     path: "/recipe-list/:id",

@@ -46,6 +46,7 @@
           rounded
           menu-icon=""
           placeholder="Search recipe or ingredient"
+          @keydown.enter="searchRecipes"
           @update:search="onSearch"
           @update:model-value="onSelect" />
         <div class="d-flex align-center">
@@ -54,7 +55,11 @@
             <div v-if="authStore && authStore.initialized">
               <div
                 @click="toProfile"
-                v-if="authStore.user && authStore.user?.photoURL && authStore.user?.displayName"
+                v-if="
+                  authStore.user &&
+                  authStore.user?.photoURL &&
+                  authStore.user?.displayName
+                "
                 class="d-flex align-center button-profile"
                 :style="
                   $vuetify.theme.global.name === 'dark'
@@ -70,7 +75,11 @@
                   :src="user.photoURL"
                   alt="User Photo" />
                 <p
-                  style="font-size: 15px; line-height: normal;">
+                  style="
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: normal;
+                  ">
                   {{ user.displayName }}
                 </p>
               </div>
@@ -146,6 +155,7 @@
         variant="outlined"
         menu-icon=""
         placeholder="Search recipe or ingredient"
+        @keydown.enter="searchRecipes"
         @update:search="onSearch"
         @update:model-value="onSelect" />
     </div>
@@ -171,7 +181,6 @@
     </v-list>
   </v-navigation-drawer>
 </template>
-
 
 <script>
   import { useRecipeStore } from "@/stores/recipeSearch";
@@ -214,7 +223,7 @@
         return this.$vuetify.theme.global.name === "dark";
       },
       user() {
-        return this.authStore.user
+        return this.authStore.user;
       },
     },
 
@@ -233,10 +242,10 @@
 
     methods: {
       commitBlankData() {
-        const blank = this.blankData
+        const blank = this.blankData;
         Object.entries(blank).forEach(([key, value]) => {
-          this.$store.commit(`customerHolder/${key}`, value)
-        })
+          this.$store.commit(`customerHolder/${key}`, value);
+        });
       },
 
       toProfile() {
@@ -248,7 +257,7 @@
       },
 
       handleLogin() {
-        this.$router.push("/login")
+        this.$router.push("/login");
       },
 
       async onSearch(query) {
