@@ -121,7 +121,7 @@
       <div>
         <p class="mb-8" style="color: #4f4f4fe5; font-size: 16px">
           Don't have an account yet?
-          <b style="color: #ff8417; cursor: pointer" @click="toSignUp()">Sign Up</b>
+          <b style="color: #ff8417; cursor: pointer" @click="toRegister()">Register</b>
         </p>
       </div>
     </div>
@@ -218,8 +218,8 @@
           alert("Google login failed!");
         }
       },
-      toSignUp() {
-        this.$router.push({ path: '/signup' })
+      toRegister() {
+        this.$router.push({ path: '/register' })
       },
       toHome() {
         this.$router.push({ path: '/' })

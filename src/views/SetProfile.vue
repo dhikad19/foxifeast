@@ -1,34 +1,65 @@
 <template>
-  <v-container class="py-10" style="max-width: 500px">
-    <h2 class="text-h5 mb-6">Set Your Profile</h2>
-
-    <v-text-field
-      v-model="displayName"
-      label="Full Name"
-      required
-    />
-
-    <v-file-input
-      v-model="avatarFile"
-      accept="image/*"
-      label="Upload Avatar"
-      prepend-icon="mdi-camera"
-      show-size
-      counter
-    />
-
-    <v-avatar size="100" class="my-4" v-if="avatarPreview">
-      <v-img :src="avatarPreview" />
-    </v-avatar>
-
-    <v-btn
-      :loading="loading"
-      color="primary"
-      @click="handleSetProfile"
-    >
-      Save Profile
-    </v-btn>
-  </v-container>
+  <div class="register-container">
+    <div class="form-register__container">
+      <div class="form-container">
+        <div class="mb-8 mt-4 d-flex align-center justify-center flex-column">
+          <p class="title-form">Register</p>
+          <p class="mt-2 desc-form">
+            Set up your <span style="color: #ff8417">Feast</span> profile.
+          </p>
+        </div>
+        <v-form>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-model="displayName"
+                label="Full Name"
+                required
+                variant="outlined"
+                density="compact"
+                :rules="rules"
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-avatar size="100" class="my-4" v-if="avatarPreview">
+                <v-img :src="avatarPreview" />
+              </v-avatar>
+              <v-file-input
+                v-model="avatarFile"
+                accept="image/*"
+                label="Upload Avatar"
+                prepend-icon="mdi-camera"
+                show-size
+                variant="outlined"
+                density="compact"
+                counter
+                :rules="rules"
+              />
+            </v-col>
+            <v-col>
+              <v-btn
+                :disabled="loading || !isFormValid"
+                :loading="loading"
+                color="#FF8417"
+                @click="handleSetProfile"
+                height="40"
+                class="mt-2"
+                block
+                style="
+                  color: white;
+                  text-transform: capitalize;
+                  letter-spacing: normal;
+                "
+                flat
+              >
+                Save Profile
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -43,6 +74,9 @@ export default {
       displayName: "",
       avatarFile: null,
       loading: false,
+      rules: [
+        v => !!v || "Confirm password is required"
+      ],
     };
   },
   computed: {
@@ -50,6 +84,9 @@ export default {
       return this.avatarFile instanceof File
         ? URL.createObjectURL(this.avatarFile)
         : "";
+    },
+    isFormValid() {
+      return this.displayName.trim() !== "" && this.avatarFile !== null;
     },
   },
   methods: {
@@ -116,3 +153,76 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.title-form {
+  font-weight: 500;
+  font-size: 30px;
+  text-align: center;
+  @media screen and (max-width: 960px) {
+    font-size: 28px;
+  }
+}
+
+.text-divider {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+}
+
+.text-divider:before,
+.text-divider:after {
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid #4f4f4fe5;
+  margin: auto;
+}
+
+.text-divider:before {
+  margin-right: 10px;
+}
+
+.text-divider:after {
+  margin-left: 10px;
+}
+
+.desc-form {
+  max-width: 380px;
+  text-align: center;
+  line-height: normal;
+  font-size: 15px;
+}
+
+.signin-desc {
+  font-size: 15px;
+  line-height: normal;
+  max-width: 400px;
+  text-align: center;
+}
+
+.register-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: calc(100vh - 170px);
+}
+.form-register__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.form-container {
+  max-width: 400px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  @media screen and (max-width: 960px) {
+    padding: 8px;
+  }
+}
+</style>

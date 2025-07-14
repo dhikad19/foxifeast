@@ -21,8 +21,17 @@
           class="d-flex align-center ml-4"
           :style="$vuetify.display.smAndDown ? 'gap: 10px' : 'gap: 20px'"
           :class="$vuetify.display.smAndDown ? '' : ''">
-          <div v-for="(item, i) in items" :key="i" style="font-size: 15px; font-weight: 500" class="cursor-pointer">
-            {{ item }}
+          <div 
+          style="font-size: 15px; font-weight: 500" 
+          @click="toHome"
+          class="cursor-pointer">
+            Home
+          </div>
+          <div 
+          style="font-size: 15px; font-weight: 500" 
+          @click="toBlog"
+          class="cursor-pointer">
+            Blog
           </div>
         </div>
       </div>
@@ -43,7 +52,6 @@
           density="compact"
           append-inner-icon="mdi-magnify"
           variant="outlined"
-          rounded
           menu-icon=""
           placeholder="Search recipe or ingredient"
           @keydown.enter="searchRecipes"
@@ -54,7 +62,6 @@
             <!-- Jangan akses authStore langsung jika masih null -->
             <div v-if="authStore && authStore.initialized">
               <div
-                @click="toProfile"
                 v-if="
                   authStore.user &&
                   authStore.user?.photoURL &&
@@ -66,32 +73,57 @@
                     ? 'background-color: #4f4f4f; '
                     : 'background-color: #fafafa; '
                 ">
-                <v-img
-                  v-if="user.photoURL"
-                  class="mr-2"
-                  referrerpolicy="no-referrer"
-                  style="border-radius: 50%; max-height: 20px; width: 20px"
-                  :to="'/profile'"
-                  :src="user.photoURL"
-                  alt="User Photo" />
+                  <v-img
+                    v-if="user.photoURL"
+                    class="mr-2"
+                    referrerpolicy="no-referrer"
+                    style="border-radius: 50%; max-height: 20px; width: 20px"
+                    :to="'/profile'"
+                    :src="user.photoURL"
+                    alt="User Photo" />
                   <p
-                  v-if="user.displayName.split(' ').length > 1"
-                  style="
-                    font-size: 14px;
-                    font-weight: 500;
-                    line-height: normal;
-                  ">
-                  {{ user.displayName.split(' ')[0] }}
-                </p>
-                <p
-                  v-else
-                  style="
-                    font-size: 14px;
-                    font-weight: 500;
-                    line-height: normal;
-                  ">
-                  {{ user.displayName }}
-                </p>
+                    v-if="user.displayName.split(' ').length > 1"
+                    style="
+                      font-size: 14px;
+                      font-weight: 500;
+                      line-height: normal;
+                    ">
+                    {{ user.displayName.split(' ')[0] }}
+                  </p>
+                  <p
+                    v-else
+                    style="
+                      font-size: 14px;
+                      font-weight: 500;
+                      line-height: normal;
+                    ">
+                    {{ user.displayName }}
+                  </p>
+                  <v-menu activator="parent">
+                    <v-list>
+                      <v-list-item @click="toProfile" style="min-height: 55px">
+                        <div class="d-flex">
+                          <v-avatar size="35">
+                            <v-img :src="user.photoURL"></v-img>
+                          </v-avatar>
+                          <div class="ml-4">
+                            <p style="font-weight: bold; font-size: 15px; line-height: normal">{{user.displayName}}</p>
+                            <p style="font-size: 13px;">{{user.email}}</p>
+                          </div>
+                        </div>
+                      </v-list-item>
+                      <v-list-item @click="toProfile" style="min-height: 40px">
+                        <p style="font-weight: 500; font-size: 14px;">
+                          Meal Planner
+                        </p>
+                      </v-list-item>
+                      <v-list-item @click="logout" style="min-height: 40px">
+                        <p style="font-weight: bold; font-size: 14px; color: #ff7800">
+                          Logout
+                        </p>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
               </div>
               <div
                 v-else
@@ -103,7 +135,7 @@
                     ? 'background-color: #4f4f4f; '
                     : 'background-color: #fafafa; '
                 ">
-                <p style="font-size: 15px; line-height: normal">Login</p>
+                <p style="font-size: 15px; font-weight: 500; line-height: normal">Login</p>
               </div>
             </div>
           </div>
@@ -209,6 +241,12 @@
         results: [],
         loading: false,
         cancelToken: null,
+        itemsa: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' },
+      ],
         drawer: false,
         authStore: useAuthStore(),
         search: "",
@@ -257,6 +295,14 @@
     },
 
     methods: {
+      toHome() {
+        this.$router.push('/')
+      },
+
+      toBlog() {
+        this.$router.push('/blog')
+      },
+
       async handleList(id) {
         const store = useRecipeStore();
         await store.fetchRecipes(this.query);
@@ -355,7 +401,7 @@
     padding-left: 15px;
     padding-right: 15px;
     margin-bottom: 2px;
-    border-radius: 20px;
+    border-radius: 4px;
   }
   .toggle-mode {
     padding: 10px;
@@ -364,7 +410,7 @@
     margin-left: 10px;
     cursor: pointer;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: 4px;
   }
   .text-decoration-none {
     text-decoration: none;

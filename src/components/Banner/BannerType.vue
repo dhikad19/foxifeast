@@ -24,13 +24,15 @@
         ">
         <v-img
           width="100%"
+          :cover="$vuetify.display.smAndDown ? true : false"
+          :height="$vuetify.display.smAndDown ? '180' : ''"
           :max-width="$vuetify.display.smAndDown ? '100%' : '50%'"
           style="border-radius: 4px"
           src="https://img.spoonacular.com/recipes/641975-636x393.jpg"></v-img>
         <div class="pa-4">
           <span class="title">Hearty Dinner Recipes to End Your Day Right</span>
           <p
-            class="mt-4"
+            class="mt-2"
             :class="$vuetify.display.smAndDown ? 'description' : ' '">
             End your day with comforting, satisfying meals made from simple
             ingredients. These dinner recipes are perfect for winding down,
@@ -57,7 +59,7 @@
             >Quick and Tasty Lunch Ideas for Midday Energy</span
           >
           <p
-            class="mt-4"
+            class="mt-2"
             :class="$vuetify.display.smAndDown ? 'description' : ' '">
             Fuel your afternoon with these easy and delicious lunch recipes.
             Designed for busy schedules and hungry appetites, these meals offer
@@ -68,6 +70,8 @@
         </div>
         <v-img
           width="100%"
+          :cover="$vuetify.display.smAndDown ? true : false"
+          :height="$vuetify.display.smAndDown ? '180' : ''"
           :max-width="$vuetify.display.smAndDown ? '100%' : '50%'"
           style="border-radius: 4px"
           src="https://img.spoonacular.com/recipes/632502-636x393.jpg"></v-img>
@@ -88,13 +92,15 @@
           :max-width="$vuetify.display.smAndDown ? '100%' : '50%'"
           style="border-radius: 4px"
           width="100%"
+          :cover="$vuetify.display.smAndDown ? true : false"
+          :height="$vuetify.display.smAndDown ? '180' : ''"
           src="https://img.spoonacular.com/recipes/637792-636x393.jpg"></v-img>
         <div class="pa-4">
           <span class="title"
             >Bright Mornings: Breakfast Recipes to Start Fresh</span
           >
           <p
-            class="mt-4"
+            class="mt-2"
             :class="$vuetify.display.smAndDown ? 'description' : ' '">
             Jumpstart your day with energizing and wholesome breakfast dishes.
             Whether you prefer something sweet, savory, light, or hearty — these
@@ -130,7 +136,7 @@
 <style scoped>
   .title {
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     line-height: normal;
   }
