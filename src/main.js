@@ -6,6 +6,7 @@ import { createPinia } from "pinia";
 import vuetify from "./plugins/vuetify";
 import "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.css";
+import "vue3-carousel/carousel.css";
 import { useAuthStore } from "@/stores/authStore";
 
 const app = createApp(App);

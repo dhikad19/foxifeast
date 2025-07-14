@@ -26,7 +26,7 @@
           width="100%"
           :max-width="$vuetify.display.smAndDown ? '100%' : '50%'"
           style="border-radius: 4px"
-          src="/assets/grid/breakfast.png"></v-img>
+          src="https://img.spoonacular.com/recipes/641975-636x393.jpg"></v-img>
         <div class="pa-4">
           <span class="title">Hearty Dinner Recipes to End Your Day Right</span>
           <p
@@ -70,7 +70,7 @@
           width="100%"
           :max-width="$vuetify.display.smAndDown ? '100%' : '50%'"
           style="border-radius: 4px"
-          src="/assets/grid/lunch.png"></v-img>
+          src="https://img.spoonacular.com/recipes/632502-636x393.jpg"></v-img>
       </div>
     </v-col>
     <v-col cols="12" class="mt-2">
@@ -88,7 +88,7 @@
           :max-width="$vuetify.display.smAndDown ? '100%' : '50%'"
           style="border-radius: 4px"
           width="100%"
-          src="/assets/grid/dinner.png"></v-img>
+          src="https://img.spoonacular.com/recipes/637792-636x393.jpg"></v-img>
         <div class="pa-4">
           <span class="title"
             >Bright Mornings: Breakfast Recipes to Start Fresh</span

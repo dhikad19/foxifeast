@@ -21,7 +21,7 @@
           class="d-flex align-center ml-4"
           :style="$vuetify.display.smAndDown ? 'gap: 10px' : 'gap: 20px'"
           :class="$vuetify.display.smAndDown ? '' : ''">
-          <div v-for="(item, i) in items" :key="i" style="font-size: 15px">
+          <div v-for="(item, i) in items" :key="i" style="font-size: 15px; font-weight: 500" class="cursor-pointer">
             {{ item }}
           </div>
         </div>
@@ -74,7 +74,17 @@
                   :to="'/profile'"
                   :src="user.photoURL"
                   alt="User Photo" />
+                  <p
+                  v-if="user.displayName.split(' ').length > 1"
+                  style="
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: normal;
+                  ">
+                  {{ user.displayName.split(' ')[0] }}
+                </p>
                 <p
+                  v-else
                   style="
                     font-size: 14px;
                     font-weight: 500;
@@ -133,8 +143,9 @@
           :style="$vuetify.display.smAndDown ? 'gap: 10px' : 'gap: 20px'">
           <div
             v-for="(item, i) in headerAdditional"
+            @click="handleList(item.value)"
             :key="i"
-            style="font-size: 15px">
+            style="font-size: 15px; font-weight: 500" class="cursor-pointer">
             {{ item.name }}
           </div>
         </div>
@@ -175,6 +186,7 @@
           v-for="(item, i) in headerAdditional"
           :key="i"
           link
+          @click="handleList(item.value)"
           :title="item.name">
         </v-list-item>
       </v-list-group>
@@ -202,16 +214,20 @@
         search: "",
         headerAdditional: [
           {
+            value: "dinner",
             name: "Dinner",
           },
           {
+            value: "easy",
             name: "Quick & Easy",
           },
           {
+            value: "healthy",
             name: "Healthy",
           },
           {
-            name: "Cheap & Tasty",
+            value: "tasty",
+            name: "Tasty",
           },
         ],
         items: ["Home", "Recipes", "Blog"],
@@ -241,6 +257,12 @@
     },
 
     methods: {
+      async handleList(id) {
+        const store = useRecipeStore();
+        await store.fetchRecipes(this.query);
+        this.$router.push(`/recipe-list/${id}`);
+      },
+
       commitBlankData() {
         const blank = this.blankData;
         Object.entries(blank).forEach(([key, value]) => {

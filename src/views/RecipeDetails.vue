@@ -1,6 +1,23 @@
 <template>
   <div class="container mx-auto p-4">
     <!-- <v-btn @click="$router.back()" variant="outlined" class="mb-4">Back</v-btn> -->
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="5000"
+    >
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="#ff7800"
+          variant="text"
+          @click="snackbar = false"
+          style="text-transform: capitalize"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <v-card variant="text" v-if="recipe">
       <v-row :class="$vuetify.display.smAndDown ? '' : 'mt-6'">
@@ -24,12 +41,13 @@
             </v-btn>
           </v-img>
           <div class="d-flex align-center mt-4 mb-8">
-            <div class="download-btn" @click="downloadRecipeCard(recipe.id)">
+            <div class="download-btn cursor-pointer" @click="downloadRecipeCard(recipe.id)">
               Download Recipe
             </div>
-            <div @click="toggleFavorite" class="save-btn ml-2">
-              <v-icon>{{
-                isFav ? "mdi-bookmark-check" : "mdi-bookmark-check-outline"
+            <div @click="toggleFavorite" class="save-btn ml-2 cursor-pointer">
+              <v-progress-circular v-if="bookmarkLogin" size="20" indeterminate></v-progress-circular>
+              <v-icon v-else>{{
+                isFav ? "mdi-bookmark-check" : "mdi-bookmark-outline"
               }}</v-icon>
             </div>
           </div>
@@ -442,11 +460,14 @@
           summer: "mdi-weather-sunny",
           spring: "mdi-leaf",
         },
+        bookmarkLogin: false,
         currentServings: 1,
         isMetric: true,
         scale: "metric",
         recipe: null,
         expanded: false,
+        snackbar: false,
+        text: ""
       };
     },
 
@@ -462,6 +483,7 @@
       },
 
       async toggleFavorite() {
+        this.bookmarkLogin = true
         const authStore = useAuthStore();
         const favoritesStore = useFavoritesStore();
 
@@ -472,8 +494,14 @@
 
         if (favoritesStore.isFavorite(this.recipe.id)) {
           await favoritesStore.removeFavorite(this.recipe.id);
+          this.snackbar = true
+          this.text = "You have removed the recipe from your bookmarks"
+          this.bookmarkLogin = false
         } else {
           await favoritesStore.addFavorite(this.recipe);
+          this.snackbar = true
+          this.text = "You have bookmarked the recipe"
+          this.bookmarkLogin = false
         }
       },
 
@@ -517,6 +545,7 @@
         return rounded.toString();
       },
     },
+
     async created() {
       const apiKey = process.env.VUE_APP_SPOONACULAR_API_KEY;
       const url = `https://api.spoonacular.com/recipes/${this.id}/information?apiKey=${apiKey}`;
@@ -528,11 +557,13 @@
         console.error("Error fetching recipe details:", error);
       }
     },
+
     computed: {
       isFav() {
         const store = useFavoritesStore();
         return store.isFavorite(this.recipe.id);
       },
+
       shortSummary() {
         const div = document.createElement("div");
         div.innerHTML = this.recipe.summary;
@@ -541,6 +572,7 @@
           ? textOnly.substring(0, 100) + "..."
           : textOnly;
       },
+
       adjustedIngredients() {
         if (!this.recipe?.extendedIngredients) return [];
 
@@ -585,6 +617,7 @@
     font-weight: 500;
     justify-content: center;
     height: 35px;
+    color: white;
     width: 100%;
     border-radius: 4px;
     background-color: #ff7800;

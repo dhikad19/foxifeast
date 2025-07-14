@@ -1,6 +1,6 @@
 <template>
   <div v-if="post" class="w-100">
-    <h1 class="text-2xl font-bold mb-4" v-html="post.title"></h1>
+    <h1 class="text-2xl font-bold mb-4" style="line-height: normal" v-html="post.title"></h1>
     <div class="rich-html mb-10 mt-6" v-html="post.content"></div>
   </div>
 </template>
@@ -41,7 +41,7 @@
   ::v-deep(.rich-html img) {
     width: 100%;
     max-width: 100%;
-    height: auto; /* Gunakan ini untuk responsif secara alami */
+    height: auto;
     display: block;
     border-radius: 4px;
     object-fit: cover;
@@ -57,6 +57,11 @@
 
   ::v-deep(.rich-html h1) {
     line-height: normal;
+  }
+
+  ::v-deep(.rich-html ul) {
+    margin-left: 18px;
+    margin-top: 10px;
   }
 
   ::v-deep(.rich-html p) {

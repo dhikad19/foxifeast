@@ -2,7 +2,7 @@
   <div>
     <p class="mb-4 title-list">Recipe list for {{ id }}</p>
 
-    <v-row>
+    <v-row class="mb-4">
       <v-col
         v-for="(recipe, i) in recipes"
         :key="i"
@@ -29,7 +29,7 @@
 
     <v-pagination
       v-if="totalPages > 1"
-      class="mt-8 mb-6"
+      class="mt-4 mb-6"
       v-model="currentPage"
       :length="totalPages"
       @input="handlePageChange"></v-pagination>

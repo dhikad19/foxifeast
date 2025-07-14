@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-6">
     <p
       class="mt-6 mb-3"
       :style="

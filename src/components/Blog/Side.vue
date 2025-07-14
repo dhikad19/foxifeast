@@ -10,11 +10,11 @@
     </p>
     <div v-if="loading">Memuat...</div>
     <v-row>
-      <v-col
-        :cols="$vuetify.display.smAndDown ? 12 : 4"
-        v-for="post in posts.slice(0, 3)"
-        :key="post.ID">
-        <router-link
+      <v-col cols="12">
+        <Carousel snapAlign="center" :gap="15" autoplay="4000" :wrapAround="true" :itemsToShow="$vuetify.display.smAndDown ? 1 : 4" :pauseAutoplayOnHover="true">
+          <Slide v-for="(post, i) in posts" :key="i">
+            <div>
+              <router-link
           :to="`/blog/${post.slug}`"
           :style="
             $vuetify.theme.global.name === 'dark'
@@ -26,19 +26,29 @@
             v-if="getImage(post)"
             :src="getImage(post)"
             :alt="post.title"
-            max-height="180"
+            height="180"
             style="border-radius: 4px"
-            cover />
+            cover 
+            />
 
-          <h3 class="font-bold mt-2" v-html="post.title"></h3>
+          <h3 class="font-bold mt-2 title-blog" v-html="post.title"></h3>
+          <p class="text-description" v-html="post.excerpt"></p>
         </router-link>
-        <p class="text-description" v-html="post.excerpt"></p>
+        
+            </div>
+          </Slide>
+          <template #addons>
+            <Navigation />
+            <Pagination />
+          </template>
+        </Carousel>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
   export default {
     name: "BlogList",
     data() {
@@ -54,6 +64,12 @@
     created() {
       this.fetchPosts();
     },
+    components: {
+    Carousel,
+    Slide,
+    Pagination,
+    Navigation
+  },
     methods: {
       getImage(post) {
         // Gunakan featured_image jika ada
@@ -91,6 +107,14 @@
 </script>
 
 <style scoped>
+  .title-blog {
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
   .text-title {
     text-decoration: none;
     line-height: normal;

@@ -1,29 +1,22 @@
 <template>
   <v-row :dense="$vuetify.display.smAndDown">
+    
     <v-col :cols="$vuetify.display.smAndDown ? 12 : 8">
-      <v-carousel
-        height="100%"
-        show-arrows
-        cycle
-        hide-delimiter-background
-        hide-delimiters
-      >
-        <v-carousel-item v-for="(slide, i) in carouselData" :key="i">
-          <v-sheet class="position-relative">
-            <v-img
+      <Carousel autoplay="4000" :wrapAround="true">
+        <Slide v-for="(slide, i) in carouselData" :key="i">
+          <v-img
+          @click="handleList(slide.type)"
               :src="slide.img"
-              class="carousel-img"
+              class="carousel-img cursor-pointer"
               cover
               @load="slide.loading = false"
             >
-              <!-- Skeleton loader saat loading -->
               <template v-if="slide.loading">
                 <div
                   class="skeleton"
                 ></div>
               </template>
 
-              <!-- Tampilkan text overlay saat gambar sudah loaded -->
               <template v-else>
                 <div class="image-text-overlay">
                   <p class="text-white font-weight-bold"
@@ -34,15 +27,17 @@
                 </div>
               </template>
             </v-img>
-          </v-sheet>
-        </v-carousel-item>
-      </v-carousel>
+        </Slide>
+        <template #addons>
+          <Navigation />
+          <Pagination />
+        </template>
+      </Carousel>
     </v-col>
-
     <v-col :cols="$vuetify.display.smAndDown ? 12 : 4">
       <v-row :dense="$vuetify.display.smAndDown">
         <v-col :cols="$vuetify.display.smAndDown ? 6 : 12">
-          <v-img class="carousel-img-right" cover src="/assets/banner/soup.png">
+          <v-img @click="handleList('soup')" class="carousel-img-right cursor-pointer" cover src="https://img.spoonacular.com/recipes/646561-636x393.jpg">
             <div class="image-text-overlay">
               <span class="text-white font-weight-bold"
                 style="overflow: hidden; text-overflow: ellipsis; max-width: 90%; white-space: nowrap">
@@ -53,7 +48,7 @@
         </v-col>
 
         <v-col :cols="$vuetify.display.smAndDown ? 6 : 12">
-          <v-img class="carousel-img-right" cover src="/assets/banner/fried-rice.png">
+          <v-img @click="handleList('rice')" class="carousel-img-right cursor-pointer" cover src="https://img.spoonacular.com/recipes/638729-636x393.jpg">
             <div class="image-text-overlay">
               <span class="text-white font-weight-bold"
                 style="overflow: hidden; text-overflow: ellipsis; max-width: 90%; white-space: nowrap">
@@ -68,34 +63,70 @@
 </template>
 
 <script>
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 export default {
   name: "CarouselComponent",
   data () {
     return {
       carouselData: [
         {
-          img: '/assets/banner/salad.png',
+          img: 'https://img.spoonacular.com/recipes/659021-636x393.jpg',
           name: 'Simple Salads That Taste Amazing',
           description: 'Discover easy-to-make salads that are both refreshing and packed with flavor—perfect for any meal or snack.',
-          loading: true
+          loading: true,
+          type: 'salad'
         },
         {
-          img: '/assets/banner/spagethi.png',
+          img: 'https://img.spoonacular.com/recipes/660820-636x393.jpg',
           name: 'The Ultimate 10 Spaghetti Recipe You Need to Try',
           description: 'From creamy to classic, explore our top 10 spaghetti recipes that will satisfy your cravings and impress your guests.',
-          loading: true
+          loading: true,
+          type: 'spaghetti'
         },
         {
-          img: '/assets/banner/sandwich.png',
+          img: 'https://img.spoonacular.com/recipes/646191-636x393.jpg',
           name: 'Quick Sandwich Ideas for Busy Days',
           description: 'Need a fast and tasty bite? These sandwich ideas are perfect for hectic mornings, work lunches, or on-the-go meals.',
-          loading: true
+          loading: true,
+          type: 'sandwich'
         }
       ]
     }  
   },
+  components: {
+    Carousel,
+    Slide,
+    Pagination,
+    Navigation
+  },
+  methods: {
+    handleList(id) {
+      this.$router.push(`/recipe-category/${id}`)
+    }
+  }
 }
 </script>
+
+<style>
+.carousel__pagination {
+  margin-bottom: 5px !important;
+}
+
+.carousel__pagination-button.carousel__pagination-button--active {
+  background-color: white !important;
+}
+
+.carousel__pagination-button {
+  background-color: rgba(255, 255, 255, 0.226) !important;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+}
+
+.carousel__icon {
+  fill: white !important;
+}
+</style>
 
 <style scoped>
 .carousel-img {
