@@ -1,94 +1,143 @@
 <template>
-  <div>
-    <v-card v-if="user" class="mx-auto max-w-md pa-6 rounded-xl shadow">
-      <v-card-title class="text-h6 font-bold">User Profile</v-card-title>
-      <v-divider class="my-4" />
+  <v-container fluid class="pa-0">
+    <div v-if="user">
+      <!-- Cover Background -->
+      <div class="cover-background mb-5">
+        <!-- Avatar -->
+        <v-avatar class="profile-avatar" size="120">
+          <v-img v-if="user.photoURL" :src="user.photoURL" />
+          <v-icon v-else size="80">mdi-account</v-icon>
+        </v-avatar>
+      </div>
 
-      <v-list>
-        <v-list-item>
-          <v-list-item-title>Email:</v-list-item-title>
-          <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
-        </v-list-item>
-        {{ user }}
-        <v-list-item v-if="user.displayName">
-          <v-list-item-title>Name:</v-list-item-title>
-          <v-list-item-subtitle>{{ user }}</v-list-item-subtitle>
-        </v-list-item>
+      <!-- Info -->
+      <v-container class="mt-10 text-center">
+        <h2 class="text-h5 font-weight-medium">
+          {{ user.displayName || "No name set" }}
+        </h2>
+        <p class="text-subtitle-2 text-grey">{{ user.email }}</p>
 
-        <v-list-item v-if="user.photoURL">
-          <v-list-item-title>Photo:</v-list-item-title>
-          <v-list-item-subtitle>
-            <v-avatar size="64">
-              <img :src="user.photoURL" alt="User Photo" />
-            </v-avatar>
-          </v-list-item-subtitle>
-        </v-list-item>
-      </v-list>
-      <h2 class="text-h5 mb-4">Your Favorite Recipes</h2>
-      <v-alert v-if="favorites.length === 0" type="info">No favorite recipes yet.</v-alert>
-      
-      <v-row>
-        <v-col
-          v-for="recipe in favorites"
-          :key="recipe.id"
-          cols="12"
-          md="4"
-        >
-          <v-card :to="`/recipe/${recipe.id}`" class="hover:scale-105 transition">
-            <v-img :src="recipe.image" height="200px" />
-            <v-card-title>{{ recipe.title }}</v-card-title>
-          </v-card>
-        </v-col>
-      </v-row>
-  
-      <v-card-actions class="mt-4">
-        <v-btn color="red" @click="logout">Logout</v-btn>
-      </v-card-actions>
+        <!-- Actions -->
+        <div
+          style="max-width: 300px; margin: 0 auto; width: 100%"
+          class="d-flex align-center justify-space-between">
+          <v-btn
+            color="#FF8417"
+            variant="elevated"
+            @click="editDialog = true"
+            prepend-icon="mdi-pencil">
+            Edit Profile
+          </v-btn>
 
-      <ProfileEdit />
-    </v-card>
+          <v-btn
+            color="red"
+            variant="outlined"
+            @click="logout"
+            prepend-icon="mdi-logout">
+            Logout
+          </v-btn>
+        </div>
 
-    <div v-else class="text-center text-gray-500">You are not logged in.</div>
-  </div>
+        <!-- Favorite Recipes -->
+        <h3 class="text-h6 mt-10 mb-4 text-left">Your Favorite Recipes</h3>
+        <v-alert v-if="favorites.length === 0" type="info" class="text-left">
+          No favorite recipes yet.
+        </v-alert>
+
+        <v-row v-else>
+          <v-col
+            v-for="recipe in favorites"
+            :key="recipe.id"
+            cols="12"
+            sm="6"
+            md="4">
+            <v-card
+              :to="`/recipe/${recipe.id}`"
+              class="hover:scale-105 transition rounded-lg">
+              <v-img :src="recipe.image" height="160px" class="rounded-t" />
+              <v-card-title>{{ recipe.title }}</v-card-title>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+
+      <!-- Edit Dialog -->
+      <v-dialog v-model="editDialog" max-width="500">
+        <v-card>
+          <v-card-title>Edit Profile</v-card-title>
+          <v-card-text>
+            <ProfileEdit @updated="handleProfileUpdated" />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="editDialog = false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
+    <div v-else class="text-center text-grey mt-10">
+      <v-icon size="40" class="mb-2">mdi-alert-circle-outline</v-icon>
+      <div>You are not logged in.</div>
+    </div>
+  </v-container>
 </template>
 
 <script>
-import { useAuthStore } from "@/stores/authStore";
-import { useFavoritesStore } from "@/stores/favoritesStore";
-import ProfileEdit from "@/components/Profile/Edit.vue"
+  import { useAuthStore } from "@/stores/authStore";
+  import { useFavoritesStore } from "@/stores/favoritesStore";
+  import ProfileEdit from "@/components/Profile/Edit.vue";
 
-export default {
-  name: "UserProfile",
-  computed: {
-    user() {
-      const store = useAuthStore();
-      return store.user;
+  export default {
+    name: "UserProfile",
+    components: { ProfileEdit },
+    data() {
+      return {
+        editDialog: false,
+      };
     },
-    favorites() {
-      return useFavoritesStore().favorites;
+    computed: {
+      user() {
+        return useAuthStore().user;
+      },
+      favorites() {
+        return useFavoritesStore().favorites;
+      },
     },
-
-  },
-  components: {
-    ProfileEdit
-  },
-  methods: {
-    logout() {
-      const store = useAuthStore();
-      store.logout().then(() => {
+    methods: {
+      async logout() {
+        await useAuthStore().logout();
         this.$router.push("/login");
-      });
+      },
+      handleProfileUpdated() {
+        this.editDialog = false;
+      },
     },
-  },
-  async mounted() {
-    const store = useFavoritesStore();
-    await store.loadFavorites();
-  }
-};
+    async mounted() {
+      await useFavoritesStore().loadFavorites();
+    },
+  };
 </script>
 
 <style scoped>
-.max-w-md {
-  max-width: 420px;
-}
+  .cover-background {
+    background-image: url("/public/assets/background-blend.png");
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    position: relative;
+    border-radius: 8px;
+  }
+
+  .profile-avatar {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid white;
+    background-color: white;
+  }
+  .text-grey {
+    color: #666;
+  }
 </style>

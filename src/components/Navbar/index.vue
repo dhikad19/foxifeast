@@ -21,16 +21,16 @@
           class="d-flex align-center ml-4"
           :style="$vuetify.display.smAndDown ? 'gap: 10px' : 'gap: 20px'"
           :class="$vuetify.display.smAndDown ? '' : ''">
-          <div 
-          style="font-size: 15px; font-weight: 500" 
-          @click="toHome"
-          class="cursor-pointer">
+          <div
+            style="font-size: 15px; font-weight: 500"
+            @click="toHome"
+            class="cursor-pointer">
             Home
           </div>
-          <div 
-          style="font-size: 15px; font-weight: 500" 
-          @click="toBlog"
-          class="cursor-pointer">
+          <div
+            style="font-size: 15px; font-weight: 500"
+            @click="toBlog"
+            class="cursor-pointer">
             Blog
           </div>
         </div>
@@ -73,57 +73,72 @@
                     ? 'background-color: #4f4f4f; '
                     : 'background-color: #fafafa; '
                 ">
-                  <v-img
-                    v-if="user.photoURL"
-                    class="mr-2"
-                    referrerpolicy="no-referrer"
-                    style="border-radius: 50%; max-height: 20px; width: 20px"
-                    :to="'/profile'"
-                    :src="user.photoURL"
-                    alt="User Photo" />
-                  <p
-                    v-if="user.displayName.split(' ').length > 1"
-                    style="
-                      font-size: 14px;
-                      font-weight: 500;
-                      line-height: normal;
-                    ">
-                    {{ user.displayName.split(' ')[0] }}
-                  </p>
-                  <p
-                    v-else
-                    style="
-                      font-size: 14px;
-                      font-weight: 500;
-                      line-height: normal;
-                    ">
-                    {{ user.displayName }}
-                  </p>
-                  <v-menu activator="parent">
-                    <v-list>
-                      <v-list-item @click="toProfile" style="min-height: 55px">
-                        <div class="d-flex">
-                          <v-avatar size="35">
-                            <v-img :src="user.photoURL"></v-img>
-                          </v-avatar>
-                          <div class="ml-4">
-                            <p style="font-weight: bold; font-size: 15px; line-height: normal">{{user.displayName}}</p>
-                            <p style="font-size: 13px;">{{user.email}}</p>
-                          </div>
+                <v-img
+                  v-if="user.photoURL"
+                  class="mr-2"
+                  referrerpolicy="no-referrer"
+                  height="20"
+                  width="20"
+                  cover=""
+                  style="border-radius: 50%"
+                  :to="'/profile'"
+                  :src="user.photoURL"
+                  alt="User Photo" />
+                <p
+                  v-if="user.displayName.split(' ').length > 1"
+                  style="
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: normal;
+                  ">
+                  {{ user.displayName.split(" ")[0] }}
+                </p>
+                <p
+                  v-else
+                  style="
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: normal;
+                  ">
+                  {{ user.displayName }}
+                </p>
+                <v-menu activator="parent">
+                  <v-list>
+                    <v-list-item @click="toProfile" style="min-height: 55px">
+                      <div class="d-flex">
+                        <v-avatar size="35">
+                          <v-img :src="user.photoURL"></v-img>
+                        </v-avatar>
+                        <div class="ml-4">
+                          <p
+                            style="
+                              font-weight: bold;
+                              font-size: 15px;
+                              line-height: normal;
+                            ">
+                            {{ user.displayName }}
+                          </p>
+                          <p style="font-size: 13px">{{ user.email }}</p>
                         </div>
-                      </v-list-item>
-                      <v-list-item @click="toProfile" style="min-height: 40px">
-                        <p style="font-weight: 500; font-size: 14px;">
-                          Meal Planner
-                        </p>
-                      </v-list-item>
-                      <v-list-item @click="logout" style="min-height: 40px">
-                        <p style="font-weight: bold; font-size: 14px; color: #ff7800">
-                          Logout
-                        </p>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
+                      </div>
+                    </v-list-item>
+                    <v-list-item @click="toProfile" style="min-height: 40px">
+                      <p style="font-weight: 500; font-size: 14px">
+                        Meal Planner
+                      </p>
+                    </v-list-item>
+                    <v-list-item @click="logout" style="min-height: 40px">
+                      <p
+                        style="
+                          font-weight: bold;
+                          font-size: 14px;
+                          color: #ff7800;
+                        ">
+                        Logout
+                      </p>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </div>
               <div
                 v-else
@@ -135,7 +150,14 @@
                     ? 'background-color: #4f4f4f; '
                     : 'background-color: #fafafa; '
                 ">
-                <p style="font-size: 15px; font-weight: 500; line-height: normal">Login</p>
+                <p
+                  style="
+                    font-size: 15px;
+                    font-weight: 500;
+                    line-height: normal;
+                  ">
+                  Login
+                </p>
               </div>
             </div>
           </div>
@@ -143,13 +165,13 @@
           <div
             @click="toggleTheme"
             class="toggle-mode"
-            :class="$vuetify.display.smAndDown ? 'mb-1' : ''"
+            style="margin-bottom: 2px"
             :style="
               !isDark
                 ? 'background-color: #fafafa'
                 : 'background-color: #4f4f4f'
             ">
-            <v-icon style="font-size: 18px">
+            <v-icon style="font-size: 20px">
               {{ isDark ? "mdi-white-balance-sunny" : "mdi-weather-night" }}
             </v-icon>
           </div>
@@ -177,7 +199,8 @@
             v-for="(item, i) in headerAdditional"
             @click="handleList(item.value)"
             :key="i"
-            style="font-size: 15px; font-weight: 500" class="cursor-pointer">
+            style="font-size: 15px; font-weight: 500"
+            class="cursor-pointer">
             {{ item.name }}
           </div>
         </div>
@@ -242,11 +265,11 @@
         loading: false,
         cancelToken: null,
         itemsa: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
+          { title: "Click Me" },
+          { title: "Click Me" },
+          { title: "Click Me" },
+          { title: "Click Me 2" },
+        ],
         drawer: false,
         authStore: useAuthStore(),
         search: "",
@@ -296,11 +319,11 @@
 
     methods: {
       toHome() {
-        this.$router.push('/')
+        this.$router.push("/");
       },
 
       toBlog() {
-        this.$router.push('/blog')
+        this.$router.push("/blog");
       },
 
       async handleList(id) {
