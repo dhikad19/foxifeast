@@ -80,6 +80,7 @@
             :loading="loading" 
             @click="login"
             color="#FF8417"
+            :disabled="!isFormValid || loading"
             height="40"
             class="mt-2"
             style="
@@ -96,25 +97,17 @@
             variant="outlined"
             class="mt-4"
             @click="loginWithGoogle"
-            style="letter-spacing: normal"
+            style="letter-spacing: normal; text-transform: capitalize;"
             block>
-            <template v-slot:default>
-              <v-img
+            <template #prepend>
+              <img
                 src="/assets/icon/google.png"
-                alt="Button Image"
-                contain
+                alt="icon"
                 height="20"
-                max-width="20"
-                class="button-image mr-3" />
-              <span
-                style="
-                  text-transform: capitalize;
-                  font-weight: 500;
-                "
-                >Sign in with google</span
-              >
-              <!-- Optional text next to the image -->
+                style="margin-right: 8px"
+              />
             </template>
+            Sign in with google
           </v-btn>
         </v-form>
       </div>
@@ -137,28 +130,6 @@
       return {
         checkbox: false,
         show: false,
-        items: [
-          {
-            img: "/banner/banner-1.png",
-            title: "Streamline Project Workflow",
-            description:
-              "Visualize project progress and manage tasks efficiently with intuitive tools.",
-          },
-          {
-            img: "/banner/banner-2.png",
-            title: "Unlock Insights with Real-Time Data",
-            description:
-              "Monitor metrics with live updates and detailed analytics to make informed decisions.",
-          },
-        ],
-        colors: [
-          "indigo",
-          "warning",
-          "pink darken-2",
-          "red lighten-1",
-          "deep-purple accent-4",
-        ],
-        slides: ["First", "Second", "Third", "Fourth", "Fifth"],
         email: "",
         password: "",
         authStore: null,
@@ -168,7 +139,7 @@
         ],
         passwordRules: [
           v => !!v || 'Password is required',
-          v => (v && v.length >= 8) || 'Must be at least 8 characters long',
+          v => v.length >= 6 || "Minimum 6 characters",
         ],
       };
     },
@@ -183,6 +154,11 @@
       isLoggedIn() {
         return this.authStore?.user !== null;
       },
+      isFormValid() {
+        return (
+          this.email && this.password
+        )
+      }
     },
 
     mounted() {

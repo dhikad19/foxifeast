@@ -65,25 +65,17 @@
             variant="outlined"
             class="mt-4"
             @click="loginWithGoogle"
-            style="letter-spacing: normal"
+            style="letter-spacing: normal; text-transform: capitalize;"
             block>
-            <template v-slot:default>
-              <v-img
+            <template #prepend>
+              <img
                 src="/assets/icon/google.png"
-                alt="Button Image"
-                contain
+                alt="icon"
                 height="20"
-                max-width="20"
-                class="button-image mr-3" />
-              <span
-                style="
-                  text-transform: capitalize;
-                  font-weight: 500;
-                "
-                >Sign in with google</span
-              >
-              <!-- Optional text next to the image -->
+                style="margin-right: 8px"
+              />
             </template>
+            Sign up with google
           </v-btn>
         </v-form>
       </div>

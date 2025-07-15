@@ -63,7 +63,7 @@
                 density="compact"
                 :rules="rules" />
             </v-col>
-            <v-col>
+            <v-col cols="12">
               <v-btn
                 :disabled="loading || !isFormValid"
                 :loading="loading"
@@ -100,7 +100,7 @@
         displayName: "",
         avatarFile: null,
         loading: false,
-        rules: [(v) => !!v || "Confirm password is required"],
+        rules: [(v) => !!v || "Full name is required"],
       };
     },
     computed: {

@@ -1,14 +1,79 @@
 <template>
-  <v-container class="py-10" style="max-width: 500px">
-    <h2 class="text-h5 mb-6">Edit Your Profile</h2>
-
-    <v-text-field
-      v-model="displayName"
-      label="Full Name"
-      required
-    />
-
-    <v-file-input
+  <div>
+    <v-form @submit.prevent="handleUpdateProfile">
+      <v-row>
+        <v-col cols="12" class="w-100 d-flex align-center flex-column">
+          <v-img
+                v-if="avatarPreview"
+                :src="avatarPreview"
+                style="border-radius: 4px"
+                height="150"
+                width="150"
+                cover>
+              </v-img>
+              <div
+                v-else
+                class="d-flex align-center justify-center"
+                style="width: 150px; height: 150px; border-radius: 4px"
+                :style="
+                  $vuetify.theme.global.name === 'dark'
+                    ? 'background-color: #4f4f4f; '
+                    : 'background-color: #fafafa; '
+                ">
+                <v-icon size="80">mdi-account</v-icon>
+              </div>
+              <v-btn
+                @click="$refs.avatarInput.click()"
+                style="
+                  text-transform: capitalize;
+                  font-weight: 500;
+                  width: 150px;
+                  letter-spacing: normal;
+                "
+                color="grey lighten-1"
+                variant="outlined"
+                class="mt-4">
+                Upload Avatar
+              </v-btn>
+              <input
+                ref="avatarInput"
+                type="file"
+                accept="image/*"
+                @change="onAvatarSelected"
+                style="display: none" />
+        </v-col>
+        <v-col cols="12">
+          <v-text-field
+          v-model="displayName"
+          label="Full Name"
+          required
+          variant="outlined"
+          density="compact"
+          :rules="rules"
+        />
+        </v-col>
+        <v-col cols="12">
+          <v-btn
+            :disabled="loading || !displayName"
+            :loading="loading"
+            color="#FF8417"
+            type="submit"
+            height="40"
+            class="mt-2"
+            block
+            style="
+              color: white;
+              text-transform: capitalize;
+              letter-spacing: normal;
+            "
+            flat>
+            Update Profile
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-form>
+    
+    <!-- <v-file-input
       v-model="avatarFile"
       label="Change Avatar"
       accept="image/*"
@@ -16,19 +81,12 @@
       show-size
       counter
     />
-
     <v-avatar size="100" class="my-4" v-if="avatarPreview">
       <v-img :src="avatarPreview" />
-    </v-avatar>
+    </v-avatar> -->
 
-    <v-btn
-      :loading="loading"
-      color="primary"
-      @click="handleUpdateProfile"
-    >
-      Update Profile
-    </v-btn>
-  </v-container>
+    
+  </div>
 </template>
 
 <script>
@@ -44,6 +102,7 @@ export default {
       displayName: "",
       avatarFile: null,
       loading: false,
+      rules: [(v) => !!v || "Full name is required"],
     };
   },
   computed: {
@@ -63,6 +122,12 @@ export default {
     }
   },
   methods: {
+    onAvatarSelected(event) {
+        const file = event.target.files[0];
+        if (file) {
+          this.avatarFile = file;
+        }
+      },
     async uploadToCloudinary(file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -75,7 +140,6 @@ export default {
       if (!response.ok) throw new Error(data.error?.message || "Upload failed");
       return data.secure_url;
     },
-
     async handleUpdateProfile() {
       const user = auth.currentUser;
       if (!user) {
@@ -107,7 +171,6 @@ export default {
         await user.reload();
         this.authStore.setUser(auth.currentUser); // refresh store
 
-        this.$router.push("/"); // kembali ke home
       } catch (e) {
         console.error(e);
         alert("Profile update failed: " + e.message);

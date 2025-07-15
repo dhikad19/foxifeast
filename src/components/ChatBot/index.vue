@@ -15,7 +15,7 @@
         max-height="90vh"
         :class="$vuetify.display.smAndDown ? '' : 'mx-auto mt-10 rounded-lg'"
         max-width="600">
-        <div class="d-flex align-center justify-space-between">
+        <div class="d-flex align-center justify-space-between pb-2 pt-2">
           <v-card-title style="font-size: 18px" class="font-bold">
             Feast Bot
           </v-card-title>
