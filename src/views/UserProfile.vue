@@ -38,7 +38,7 @@
             </v-col>
             <v-col cols="6">
               <v-btn
-                color="red"
+                color="#4f4f4f"
                 variant="outlined"
                 block
                 style="letter-spacing: normal; text-transform: capitalize;"
@@ -51,8 +51,25 @@
         </div>
         <!-- Favorite Recipes -->
       </v-container>
-      <p style="font-weight: 500" class="mt-6 mb-2">Your Favorite Recipes</p>
-        <div 
+        <v-tabs
+          v-model="tab"
+          bg-color="transparent"
+          color="#ff7800"
+          grow
+        >
+          <v-tab
+          style="letter-spacing: normal; text-transform: capitalize"
+            v-for="item in items"
+            :key="item"
+            :text="item"
+            :value="item"
+          ></v-tab>
+        </v-tabs>
+
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item value="Favorite Recipee">
+            <v-card flat class="mt-6">
+              <div 
           class="d-flex align-center jusity-center w-100" 
           v-if="favorites.length === 0" 
           style="height: 250px; text-align: center; border-radius: 8px" 
@@ -70,17 +87,29 @@
           <v-col
             v-for="recipe in favorites"
             :key="recipe.id"
-            cols="12"
-            sm="6"
-            md="4">
-            <v-card
-              :to="`/recipe/${recipe.id}`"
-              class="hover:scale-105 transition rounded-lg">
-              <v-img :src="recipe.image" height="160px" class="rounded-t" />
-              <v-card-title>{{ recipe.title }}</v-card-title>
-            </v-card>
+            :cols="$vuetify.display.smAndDown ? 12 : 3">
+            <div
+              style="border-radius: 4px; cursor: pointer"
+            :style="
+              $vuetify.theme.global.name === 'dark'
+                ? 'background-color: #4f4f4f; '
+                : 'background-color: #fafafa; '
+              "
+              @click="handleRecipe(recipe.id)"
+              >
+              <v-img :src="recipe.image" height="160px" cover class="rounded-t" />
+              <v-card-title style="font-size: 16px">{{ recipe.title }}</v-card-title>
+            </div>
           </v-col>
         </v-row>
+            </v-card>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="Meal Planner">
+            <v-card flat class="mt-6">
+              <MealPlanner />
+            </v-card>
+          </v-tabs-window-item>
+        </v-tabs-window>
 
         <v-dialog v-model="editDialog" max-width="500" :fullscreen="$vuetify.display.smAndDown">
           <v-card >
@@ -198,6 +227,7 @@
 <script>
   import { useAuthStore } from "@/stores/authStore";
   import { useFavoritesStore } from "@/stores/favoritesStore";
+  import MealPlanner from "@/components/MealPlanner/index.vue"
   // import ProfileEdit from "@/components/Profile/Edit.vue";
   import { auth, db } from "@/firebase";
   import { doc, updateDoc } from "firebase/firestore";
@@ -208,6 +238,11 @@
     // components: { ProfileEdit },
     data() {
       return {
+        tab: 'Appetizers',
+        items: [
+          "Favorite Recipee", "Meal Planner"
+        ],
+        texts: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         snackbar: false,
         text: '',
         editDialog: false,
@@ -233,7 +268,16 @@
         return useAuthStore();
       },
     },
+
+    components: {
+      MealPlanner
+    },
+
     methods: {
+      handleRecipe(id) {
+        this.$router.push(`/recipe/${id}`)
+      },
+
       async logout() {
         await useAuthStore().logout();
         this.$router.push("/login");
@@ -266,7 +310,8 @@
       async handleUpdateProfile() {
         const user = auth.currentUser;
         if (!user) {
-          alert("No user logged in.");
+          this.text = "No user logged in"
+          this.snackbar = true
           return;
         }
 
@@ -307,6 +352,7 @@
         }
       },
     },
+
     async mounted() {
       await useFavoritesStore().loadFavorites();
       const user = this.authStore.user;

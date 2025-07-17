@@ -122,11 +122,7 @@
                         </div>
                       </div>
                     </v-list-item>
-                    <v-list-item @click="toProfile" style="min-height: 40px">
-                      <p style="font-weight: 500; font-size: 14px">
-                        Meal Planner
-                      </p>
-                    </v-list-item>
+                  
                     <v-list-item @click="logout" style="min-height: 40px">
                       <p
                         style="
@@ -228,11 +224,8 @@
   </v-app-bar>
   <v-navigation-drawer style="margin-top: -1px" v-model="drawer" temporary>
     <v-list>
-      <v-list-item
-        v-for="item in items"
-        :key="item"
-        link
-        :title="item"></v-list-item>
+      <v-list-item @click="$router.push('/')" link>Home</v-list-item>
+      <v-list-item @click="$router.push('/blog')" link>Blog</v-list-item>
       <v-list-group value="Recipes">
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" title="Recipes"> </v-list-item>
@@ -264,12 +257,6 @@
         results: [],
         loading: false,
         cancelToken: null,
-        itemsa: [
-          { title: "Click Me" },
-          { title: "Click Me" },
-          { title: "Click Me" },
-          { title: "Click Me 2" },
-        ],
         drawer: false,
         authStore: useAuthStore(),
         search: "",
@@ -291,7 +278,7 @@
             name: "Tasty",
           },
         ],
-        items: ["Home", "Recipes", "Blog"],
+        items: ["Home", "Blog"],
       };
     },
 

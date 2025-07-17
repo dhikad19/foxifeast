@@ -13,18 +13,25 @@ import { useAuthStore } from "@/stores/authStore";
 import { auth } from "@/firebase";
 
 const routes = [
-  { path: "/", name: "Home", component: Home },
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+    meta: { title: "Foxi Feast | Find Your Best Meals" },
+  },
   {
     path: "/recipe/:id",
     name: "RecipeDetails",
     component: RecipeDetails,
     props: true,
+    meta: { title: "Foxi Feast | Recipe Details" },
   },
   {
     path: "/recipe-category/:category",
     name: "RecipeCategory",
     component: RecipeCategory,
-    props: true, // agar bisa langsung pakai props kalau mau
+    props: true,
+    meta: { title: "Foxi Feast | Recipe Category" },
   },
   {
     path: "/recipe-list/:id",
@@ -34,38 +41,42 @@ const routes = [
       id: route.params.id,
       page: parseInt(route.query.page) || 1,
     }),
+    meta: { title: "Foxi Feast | Recipe List" },
   },
   {
     path: "/profile",
     name: "Profile",
     component: PofileUser,
-    meta: { authOnly: true },
+    meta: { title: "Foxi Feast | Profile", authOnly: true },
   },
   {
     path: "/blog",
     name: "blog",
     component: BlogList,
+    meta: { title: "Foxi Feast | Blog" },
   },
   {
     path: "/blog/:slug",
     name: "BlogDetail",
     component: BlogDetail,
     props: true,
+    meta: { title: "Foxi Feast | Blog Detail" },
   },
   {
     path: "/setprofile",
     name: "SetProfile",
     component: SetUserProfile,
-    meta: { onlyAfterRegister: true }, // <- tambahan ini
+    meta: { title: "Foxi Feast | Set Profile", onlyAfterRegister: true },
   },
   {
     path: "/login",
     name: "Login",
     component: LoginPage,
+    meta: { title: "Foxi Feast | Login" },
     beforeEnter: (to, from, next) => {
       const authStore = useAuthStore();
       if (authStore.user) {
-        next("/"); // redirect kalau sudah login
+        next("/");
       } else {
         next();
       }
@@ -75,10 +86,11 @@ const routes = [
     path: "/register",
     name: "Register",
     component: RegisterPage,
+    meta: { title: "Foxi Feast | Register" },
     beforeEnter: (to, from, next) => {
       const authStore = useAuthStore();
       if (authStore.user) {
-        next("/"); // redirect kalau sudah login
+        next("/");
       } else {
         next();
       }
@@ -91,10 +103,10 @@ const router = createRouter({
   routes,
 });
 
+// Auth Guards
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
-  // Tunggu authStore siap (misalnya sedang loading user dari Firebase)
   if (!authStore.initialized) {
     await new Promise((resolve) => {
       const unwatch = authStore.$subscribe((_, state) => {
@@ -108,24 +120,20 @@ router.beforeEach(async (to, from, next) => {
 
   const user = auth.currentUser;
 
-  // Auth-only route: harus login
   if (to.meta.authOnly && !authStore.user) {
     return next("/login");
   }
 
-  // Guest-only route: harus logout
   if (to.meta.guestOnly && authStore.user) {
     return next("/");
   }
 
-  // ✅ Route hanya boleh diakses setelah register dan belum punya nama/foto
   if (to.meta.onlyAfterRegister) {
     if (!user || (user.displayName && user.photoURL)) {
-      return next("/"); // blokir akses langsung
+      return next("/");
     }
   }
 
-  // ⛔ Jika user login tapi belum isi profil, paksa ke /setprofile
   if (
     user &&
     (!user.displayName || !user.photoURL) &&
@@ -135,6 +143,12 @@ router.beforeEach(async (to, from, next) => {
   }
 
   next();
+});
+
+// Title Handler
+router.afterEach((to) => {
+  const defaultTitle = "Resepku App";
+  document.title = to.meta.title || defaultTitle;
 });
 
 export default router;

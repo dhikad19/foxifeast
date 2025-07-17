@@ -1,84 +1,131 @@
 <template>
   <div>
-    <h2>Artikel Terbaru dari FoxiFeast</h2>
+    <p
+      class="mb-4"
+      style="font-weight: bold"
+      :style="
+        $vuetify.display.smAndDown
+          ? 'font-size: 20px'
+          : 'font-size: 25px; margin-bottom: -10px'
+      ">
+      Blog
+    </p>
+    <div v-if="loading">
+      <v-row>
+        <v-col :cols="$vuetify.display.smAndDown ? 12 : 4" v-for="item in 6" :key="item">
+          <v-skeleton-loader type="card"></v-skeleton-loader>
+        </v-col>
+      </v-row>
+    </div>
 
-    <div v-if="loading">Memuat...</div>
-
-    <ul v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <li v-for="post in posts" :key="post.ID" class="border p-4 rounded-xl">
-        <router-link :to="`/blog/${post.slug}`">
-          <img
-            v-if="getImage(post)"
-            :src="getImage(post)"
-            :alt="post.title"
-            class="w-full h-48 object-cover rounded mb-2" />
-
-          <p style="line-height: normal; font-size: 15px">
-            {{ post.featured_image }}, image
-          </p>
-          <h3 class="font-bold" v-html="post.title"></h3>
-          <p class="text-sm">{{ stripTags(post.excerpt).slice(0, 100) }}...</p>
-          <a
-            :href="post.URL"
-            target="_blank"
-            class="inline-block mt-2 text-blue-600 underline">
-            Baca selengkapnya →
-          </a>
-        </router-link>
-        <p v-html="post.excerpt"></p>
-      </li>
-    </ul>
+    <v-row v-else>
+      <v-col
+        v-for="(item, i) in posts"
+        :key="i"
+        :cols="$vuetify.display.smAndDown ? 12 : 4"
+      >
+        <v-card
+          class="hoverable"
+          flat
+          :style="
+            $vuetify.theme.global.name === 'dark'
+              ? 'background-color: #4f4f4f; '
+              : 'background-color: #fafafa; '
+          "
+          @click="handleBlogDetails(item.slug)"
+        >
+          <div class="image-wrapper">
+            <v-img
+              :src="getImage(item)"
+              height="200"
+              cover
+              class="zoom-img"
+              :alt="item.title"
+            />
+          </div>
+          <v-card-text>
+            <h3 class="text-subtitle-1 font-weight-bold mb-2" style="line-height: normal" v-html="item.title" />
+            <p class="text-body-2 excerpt" v-html="item.excerpt" />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-  export default {
-    name: "BlogList",
-    data() {
-      return {
-        posts: [],
-        loading: false,
-        page: 1,
-        perPage: 6,
-        baseURL:
-          "https://public-api.wordpress.com/rest/v1.1/sites/www.foxifeast.wordpress.com/posts",
-      };
+export default {
+  name: "BlogList",
+  data() {
+    return {
+      posts: [],
+      loading: false,
+      page: 1,
+      perPage: 6,
+      baseURL:
+        "https://public-api.wordpress.com/rest/v1.1/sites/www.foxifeast.wordpress.com/posts",
+    };
+  },
+  created() {
+    this.fetchPosts();
+  },
+  methods: {
+    handleBlogDetails(slug) {
+      this.$router.push(`/blog/${slug}`);
     },
-    created() {
-      this.fetchPosts();
+    getImage(post) {
+      if (post.featured_image) return post.featured_image;
+
+      const attachments = Object.values(post.attachments || {});
+      if (attachments.length) {
+        return attachments[0].URL;
+      }
+
+      return "https://via.placeholder.com/600x300?text=No+Image";
     },
-    methods: {
-      getImage(post) {
-        // Gunakan featured_image jika ada
-        if (post.featured_image) return post.featured_image;
-
-        // Jika tidak, ambil dari attachments (ambil attachment pertama)
-        const attachments = Object.values(post.attachments || {});
-        if (attachments.length) {
-          return attachments[0].URL; // atau pakai thumbnails.medium, dsb
-        }
-
-        // Jika tidak ada juga, fallback
-        return "https://via.placeholder.com/600x300?text=No+Image";
-      },
-
-      async fetchPosts() {
-        this.loading = true;
-        try {
-          const res = await fetch(
-            `${this.baseURL}?page=${this.page}&number=${this.perPage}`
-          );
-          const data = await res.json();
-          this.posts = data.posts;
-        } catch (err) {
-          console.error("Gagal fetch:", err);
-        } finally {
-          this.loading = false;
-        }
-      },
-      stripTags(html) {
-        return html.replace(/<[^>]+>/g, "");
-      },
+    async fetchPosts() {
+      this.loading = true;
+      try {
+        const res = await fetch(
+          `${this.baseURL}?page=${this.page}&number=${this.perPage}`
+        );
+        const data = await res.json();
+        this.posts = data.posts;
+      } catch (err) {
+        console.error("Gagal fetch:", err);
+      } finally {
+        this.loading = false;
+      }
     },
-  };
+  },
+};
 </script>
+
+<style scoped>
+.excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hoverable {
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.image-wrapper {
+  overflow: hidden;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.zoom-img {
+  transition: transform 0.3s ease;
+}
+
+.hoverable:hover .zoom-img {
+  transform: scale(1.1);
+}
+</style>

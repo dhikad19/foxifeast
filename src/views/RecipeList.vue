@@ -34,7 +34,14 @@
       :length="totalPages"
       @input="handlePageChange"></v-pagination>
 
-    <p v-if="!recipes.length" class="text-gray-500 mt-6">No recipes found.</p>
+    <v-row v-if="!recipes.length" class="mb-4">
+      <v-col 
+      v-for="item in 8" 
+      :key="item" 
+      :cols="$vuetify.display.smAndDown ? 12 : 3">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

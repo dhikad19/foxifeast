@@ -143,7 +143,8 @@ export default {
     async handleUpdateProfile() {
       const user = auth.currentUser;
       if (!user) {
-        alert("No user logged in.");
+        this.text = "No user logged in"
+          this.snackbar = true
         return;
       }
 
@@ -173,7 +174,8 @@ export default {
 
       } catch (e) {
         console.error(e);
-        alert("Profile update failed: " + e.message);
+        this.text = "Profile update failed"
+        this.snackbar = true
       } finally {
         this.loading = false;
       }

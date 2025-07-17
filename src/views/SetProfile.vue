@@ -85,6 +85,23 @@
         </v-form>
       </div>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="5000"
+    >
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="#ff7800"
+          variant="text"
+          @click="snackbar = false"
+          style="text-transform: capitalize"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -98,6 +115,8 @@
     data() {
       return {
         displayName: "",
+        snackbar: false,
+        text: "",
         avatarFile: null,
         loading: false,
         rules: [(v) => !!v || "Full name is required"],
@@ -144,7 +163,8 @@
       async handleSetProfile() {
         const user = auth.currentUser;
         if (!user) {
-          alert("No user logged in.");
+          this.text = "No user logged in"
+          this.snackbar = true
           return;
         }
 
@@ -179,7 +199,8 @@
           });
         } catch (err) {
           console.error(err);
-          alert("Profile setup failed: " + err.message);
+          this.text = "Profile setup failed"
+          this.snackbar = true
         } finally {
           this.loading = false;
         }

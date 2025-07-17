@@ -118,6 +118,23 @@
         </p>
       </div>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="5000"
+    >
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="#ff7800"
+          variant="text"
+          @click="snackbar = false"
+          style="text-transform: capitalize"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -130,6 +147,8 @@
       return {
         checkbox: false,
         show: false,
+        snackbar: false,
+        text: "",
         email: "",
         password: "",
         authStore: null,
@@ -183,7 +202,8 @@
           await this.authStore.login(this.email, this.password);
           this.$router.push("/");
         } catch (e) {
-          alert("Login failed!");
+          this.text = "Login failed"
+          this.snackbar = true
         }
       },
       async loginWithGoogle() {
@@ -191,7 +211,8 @@
           await this.authStore.loginWithGoogle();
           this.$router.push("/");
         } catch (e) {
-          alert("Google login failed!");
+          this.text = "Google login failed"
+          this.snackbar = true
         }
       },
       toRegister() {

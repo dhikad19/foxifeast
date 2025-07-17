@@ -86,7 +86,23 @@
         </p>
       </div>
     </div>
-    
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="5000"
+    >
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="#ff7800"
+          variant="text"
+          @click="snackbar = false"
+          style="text-transform: capitalize"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -102,6 +118,8 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      snackbar: false,
+        text: "",
       passwordRules: [
         v => !!v || "Password is required",
         v => v.length >= 6 || "Minimum 6 characters",
@@ -155,7 +173,8 @@ export default {
           await this.authStore.loginWithGoogle();
           this.$router.push("/");
         } catch (e) {
-          alert("Google login failed!");
+          this.text = "Google login failed"
+          this.snackbar = true
         }
       },
 
@@ -172,7 +191,8 @@ export default {
         await createUserWithEmailAndPassword(auth, this.email, this.password);
         this.$router.push("/setprofile");
       } catch (error) {
-        alert("Registration failed: " + error.message);
+        this.text = "Registration failed"
+        this.snackbar = true
       } finally {
         this.loading = false;
       }
